@@ -110,7 +110,7 @@ export const AdminCustomOrdersPage: React.FC = () => {
                 {filtered.map((ord) => {
                   const whatsappUrl = createWhatsAppUrl(
                     ord.customer_whatsapp || ord.customer_phone,
-                    `Namaste ${ord.customer_name}, regards from Vetri Arts & Crafts concerning your Custom Statue Commission (${ord.request_id}) for a ${ord.deity} murti.`
+                    `Namaste ${ord.customer_name}, regards from Sashtha Arts & Crafts concerning your Custom Statue Commission (${ord.request_id}) for a ${ord.deity} murti.`
                   );
 
                   return (

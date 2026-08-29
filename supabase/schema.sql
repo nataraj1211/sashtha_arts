@@ -1,5 +1,5 @@
 -- ====================================================================
--- VETRI ARTS & CRAFTS — PRODUCTION DATABASE SCHEMA
+-- SASHTHA ARTS & CRAFTS — PRODUCTION DATABASE SCHEMA
 -- PostgreSQL / Supabase
 -- ====================================================================
 
@@ -202,11 +202,11 @@ CREATE TABLE IF NOT EXISTS public.homepage_content (
 -- 11. ADMIN SETTINGS TABLE
 CREATE TABLE IF NOT EXISTS public.admin_settings (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    business_name TEXT DEFAULT 'Vetri Arts & Crafts',
-    admin_email TEXT DEFAULT 'admin@vetriarts.com',
+    business_name TEXT DEFAULT 'Sashtha Arts & Crafts',
+    admin_email TEXT DEFAULT 'admin@sashthaarts.com',
     admin_whatsapp TEXT DEFAULT '+919342839218',
     business_phone TEXT DEFAULT '+919342839218',
-    instagram_url TEXT DEFAULT 'https://instagram.com/vetriartsncrafts',
+    instagram_url TEXT DEFAULT 'https://instagram.com/sashthaartsncrafts',
     whatsapp_url TEXT DEFAULT 'https://wa.me/919342839218',
     address TEXT DEFAULT 'Swamimalai / Mahabalipuram Heritage Workshop, Tamil Nadu, India',
     email_notifications_enabled BOOLEAN DEFAULT TRUE,

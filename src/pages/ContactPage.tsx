@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
 import {
-  MapPin,
   Phone,
   Mail,
+  MapPin,
+  Clock,
   Instagram,
   MessageCircle,
-  Clock,
   Sparkles,
+  Send,
   CheckCircle2,
   Copy,
 } from 'lucide-react';
-import { generateRequestId, copyToClipboard, createWhatsAppUrl } from '@/lib/utils';
 import { db } from '@/lib/supabase';
 import { sendAdminNotifications } from '@/lib/notificationService';
-import { useToast } from '@/context/ToastContext';
-import { Button } from '@/components/common/Button';
+import { createWhatsAppUrl } from '@/lib/utils';
 
 export const ContactPage: React.FC = () => {
   const [name, setName] = useState('');
@@ -24,49 +23,40 @@ export const ContactPage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedRequestId, setSubmittedRequestId] = useState<string | null>(null);
 
-  const { success, error: toastError } = useToast();
-
   const adminWhatsApp = import.meta.env.VITE_ADMIN_WHATSAPP_NUMBER || '+919342839218';
   const whatsappUrl = createWhatsAppUrl(
     adminWhatsApp,
-    'Namaste Vetri Arts & Crafts, I would like to consult with your artisan.'
+    'Namaste Sashtha Arts & Crafts, I would like to consult with your artisan.'
   );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !phone.trim() || !message.trim()) {
-      toastError('Please fill in your Name, Phone Number, and Message.');
+      alert('Please fill in your Name, Phone Number, and Message.');
       return;
     }
 
     setIsSubmitting(true);
     try {
-      const requestId = generateRequestId('enquiry');
-      await db.createEnquiry({
-        request_id: requestId,
-        product_name: 'General Consultation / Website Message',
-        customer_name: name,
-        customer_phone: phone,
-        customer_email: email,
-        message,
-        status: 'New',
-        email_notified: false,
-        whatsapp_notified: false,
+      const enquiry = await db.createEnquiry({
+        customer_name: name.trim(),
+        customer_phone: phone.trim(),
+        customer_email: email.trim() || undefined,
+        message: message.trim(),
       });
 
       sendAdminNotifications({
-        requestId,
+        requestId: enquiry.id,
         type: 'Contact',
-        customerName: name,
-        customerPhone: phone,
-        customerEmail: email,
-        message,
-      }).catch((e) => console.warn('Background notification dispatch error', e));
+        customerName: name.trim(),
+        customerPhone: phone.trim(),
+        customerEmail: email.trim() || undefined,
+        message: message.trim(),
+      });
 
-      setSubmittedRequestId(requestId);
-      success('Message sent! Our master sthapathi team will contact you.');
-    } catch (err: any) {
-      toastError(err?.message || 'Failed to send message.');
+      setSubmittedRequestId(enquiry.id);
+    } catch {
+      alert('Failed to submit enquiry. Please contact us via WhatsApp.');
     } finally {
       setIsSubmitting(false);
     }
@@ -74,29 +64,29 @@ export const ContactPage: React.FC = () => {
 
   const handleCopyId = () => {
     if (submittedRequestId) {
-      copyToClipboard(submittedRequestId);
-      success(`Copied Message Reference ID: ${submittedRequestId}`);
+      navigator.clipboard.writeText(submittedRequestId);
+      alert('Reference ID copied to clipboard!');
     }
   };
 
   return (
-    <div className="pt-28 pb-24 bg-sand-50 min-h-screen">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        {/* Banner */}
-        <div className="text-center space-y-3 max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-gold-500/15 border border-gold-500/30 text-gold-900 text-xs font-bold uppercase tracking-widest">
-            <Sparkles className="w-3.5 h-3.5 text-gold-600" />
-            <span>Artisan Consultation</span>
-          </div>
-          <h1 className="font-serif text-3xl sm:text-5xl font-bold text-temple-950">
-            Contact Vetri Arts &amp; Crafts
-          </h1>
-          <p className="text-sm text-temple-700 leading-relaxed">
-            Reach out for custom statue orders, temple sanctum enquiries, material advice, or workshop visits in Tamil Nadu.
-          </p>
+    <div className="min-h-screen bg-sand-50 pt-28 pb-20">
+      {/* Top Banner */}
+      <div className="container mx-auto px-4 max-w-5xl mb-12 text-center">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold-100 border border-gold-300 text-gold-900 text-xs font-bold uppercase tracking-wider mb-4">
+          <Sparkles className="w-3.5 h-3.5" />
+          <span>Get in Touch Directly</span>
         </div>
+        <h1 className="font-serif text-3xl sm:text-5xl font-bold text-temple-950 mb-4">
+          Contact Our Heritage Artisan
+        </h1>
+        <p className="text-sand-700 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
+          Whether you seek a customized idol, large-scale temple sthapati work, or want to inquire about custom metal casting, we are ready to guide you.
+        </p>
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div className="container mx-auto px-4 max-w-5xl">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Left Column: Direct Contact Info & Socials */}
           <div className="lg:col-span-5 space-y-6">
             <div className="bg-white rounded-3xl p-8 border border-sand-300 shadow-sm space-y-6">
@@ -139,7 +129,7 @@ export const ContactPage: React.FC = () => {
                   </div>
                   <div>
                     <span className="text-[10px] uppercase font-bold text-sand-600 block">Official Enquiries</span>
-                    <span className="font-bold text-temple-950">contact@vetriarts.com</span>
+                    <span className="font-bold text-temple-950">contact@sashthaarts.com</span>
                   </div>
                 </div>
 
@@ -173,13 +163,13 @@ export const ContactPage: React.FC = () => {
               {/* Instagram link */}
               <div className="pt-2">
                 <a
-                  href="https://instagram.com/vetriartsncrafts"
+                  href="https://instagram.com/sashthaartsncrafts"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl bg-pink-700 hover:bg-pink-800 text-white font-bold text-xs transition-colors shadow-sm"
                 >
                   <Instagram className="w-4 h-4" />
-                  <span>Follow @vetriartsncrafts on Instagram</span>
+                  <span>Follow @sashthaartsncrafts on Instagram</span>
                 </a>
               </div>
             </div>
@@ -216,16 +206,15 @@ export const ContactPage: React.FC = () => {
                 </div>
 
                 <div className="pt-2">
-                  <Button
-                    variant="outline"
-                    size="md"
+                  <button
                     onClick={() => {
                       setSubmittedRequestId(null);
                       setMessage('');
                     }}
+                    className="px-6 py-3 rounded-xl border border-sand-300 hover:bg-sand-100 font-bold text-xs text-temple-950"
                   >
                     Send Another Message
-                  </Button>
+                  </button>
                 </div>
               </div>
             ) : (
@@ -259,7 +248,7 @@ export const ContactPage: React.FC = () => {
                     <input
                       type="tel"
                       required
-                      placeholder="+91 98765 43210"
+                      placeholder="+91 93428 39218"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       className="w-full px-4 py-2.5 rounded-xl border border-sand-300 text-sm focus:ring-2 focus:ring-gold-500"
@@ -271,7 +260,7 @@ export const ContactPage: React.FC = () => {
                     </label>
                     <input
                       type="email"
-                      placeholder="your.email@example.com"
+                      placeholder="you@domain.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="w-full px-4 py-2.5 rounded-xl border border-sand-300 text-sm focus:ring-2 focus:ring-gold-500"
@@ -286,24 +275,21 @@ export const ContactPage: React.FC = () => {
                   <textarea
                     rows={4}
                     required
-                    placeholder="Tell us about the deity, required size, material, or custom temple requirements..."
+                    placeholder="Describe your deity statue requirements, sanctum dimensions, or temple project questions..."
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    className="w-full p-4 rounded-xl border border-sand-300 text-sm focus:ring-2 focus:ring-gold-500"
+                    className="w-full px-4 py-2.5 rounded-xl border border-sand-300 text-sm focus:ring-2 focus:ring-gold-500"
                   />
                 </div>
 
-                <div className="pt-2">
-                  <Button
-                    variant="gold"
-                    size="lg"
-                    type="submit"
-                    isLoading={isSubmitting}
-                    className="w-full font-bold shadow-gold-sm"
-                  >
-                    SEND MESSAGE
-                  </Button>
-                </div>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gold-500 hover:bg-gold-400 text-temple-950 font-bold text-sm shadow-gold-sm transition-transform hover:scale-[1.01] disabled:opacity-50"
+                >
+                  <Send className="w-4 h-4" />
+                  <span>{isSubmitting ? 'Sending Enquiry...' : 'Submit Enquiry'}</span>
+                </button>
               </form>
             )}
           </div>

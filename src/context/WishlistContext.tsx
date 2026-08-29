@@ -13,12 +13,12 @@ interface WishlistContextType {
 
 const WishlistContext = createContext<WishlistContextType | undefined>(undefined);
 
-const WISHLIST_STORAGE_KEY = 'vetri_arts_wishlist';
+const WISHLIST_STORAGE_KEY = 'sashtha_arts_wishlist';
 
 export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [wishlist, setWishlist] = useState<Product[]>(() => {
     try {
-      const saved = localStorage.getItem(WISHLIST_STORAGE_KEY);
+      const saved = localStorage.getItem(WISHLIST_STORAGE_KEY) || localStorage.getItem('vetri_arts_wishlist');
       return saved ? JSON.parse(saved) : [];
     } catch {
       return [];

@@ -33,10 +33,10 @@ export const AdminEnquiriesPage: React.FC = () => {
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       return (
-        e.request_id.toLowerCase().includes(q) ||
+        (e.request_id || e.id).toLowerCase().includes(q) ||
         e.customer_name.toLowerCase().includes(q) ||
         e.customer_phone.toLowerCase().includes(q) ||
-        e.product_name?.toLowerCase().includes(q)
+        (e.product_name || '').toLowerCase().includes(q)
       );
     }
     return true;
@@ -109,7 +109,7 @@ export const AdminEnquiriesPage: React.FC = () => {
                 {filtered.map((enq) => {
                   const whatsappUrl = createWhatsAppUrl(
                     enq.customer_whatsapp || enq.customer_phone,
-                    `Namaste ${enq.customer_name}, regards from Vetri Arts & Crafts concerning your enquiry (${enq.request_id}) for ${enq.product_name || 'statue consultation'}.`
+                    `Namaste ${enq.customer_name}, regards from Sashtha Arts & Crafts concerning your enquiry (${enq.request_id}) for ${enq.product_name || 'statue consultation'}.`
                   );
 
                   return (

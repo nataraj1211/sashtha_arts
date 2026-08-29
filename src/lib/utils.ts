@@ -20,9 +20,9 @@ export function formatPrice(price?: number, priceOnRequest: boolean = false): st
 }
 
 /**
- * Generate unique request IDs conforming to Vetri Arts & Crafts standard:
- * - Order: VAC-2026-XXXX
- * - Enquiry: VAC-ENQ-XXXX
+ * Generate unique request IDs conforming to Sashtha Arts & Crafts standard:
+ * - Order: SAC-2026-XXXX
+ * - Enquiry: SAC-ENQ-XXXX
  * - Custom: CUSTOM-XXXX
  * - Temple: TEMPLE-XXXX
  */
@@ -32,15 +32,15 @@ export function generateRequestId(type: 'order' | 'enquiry' | 'custom' | 'temple
 
   switch (type) {
     case 'order':
-      return `VAC-${year}-${randomNum}`;
+      return `SAC-${year}-${randomNum}`;
     case 'enquiry':
-      return `VAC-ENQ-${randomNum}`;
+      return `SAC-ENQ-${randomNum}`;
     case 'custom':
       return `CUSTOM-${randomNum}`;
     case 'temple':
       return `TEMPLE-${randomNum}`;
     default:
-      return `VAC-${randomNum}`;
+      return `SAC-${randomNum}`;
   }
 }
 

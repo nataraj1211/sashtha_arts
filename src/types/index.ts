@@ -7,16 +7,13 @@ export type DeityType =
   | 'krishna'
   | 'ayyappan'
   | 'anjaneyar'
-  | 'lakshmi'
   | 'other';
 
 export type MaterialType =
-  | 'Panchaloha (5-Metal Sacred Alloy)'
-  | 'Chola Lost-Wax Cast Bronze'
-  | 'Traditional Solid Bronze'
-  | 'Solid Pure Brass'
-  | 'Heavy Pure Brass'
-  | 'Monolithic Black Granite Stone'
+  | 'Lost-Wax Bronze'
+  | 'Panchaloha (5-Metal Alloy)'
+  | 'Brass'
+  | 'Monolithic Granite Stone'
   | 'Hand-Carved Teak Wood'
   | 'Country Teak & Rosewood'
   | 'Other';
@@ -99,20 +96,18 @@ export type EnquiryStatus =
 
 export interface Enquiry {
   id: string;
-  request_id: string;
+  request_id?: string;
   product_id?: string;
   product_name?: string;
+  product_code?: string;
   customer_name: string;
   customer_phone: string;
   customer_whatsapp?: string;
   customer_email?: string;
   message: string;
   status: EnquiryStatus;
-  email_notified: boolean;
-  whatsapp_notified: boolean;
-  email_error?: string;
-  whatsapp_error?: string;
   notes?: string;
+  admin_notes?: string;
   created_at?: string;
   updated_at?: string;
 }
@@ -120,27 +115,34 @@ export interface Enquiry {
 export interface Order {
   id: string;
   request_id: string;
+  order_number?: string;
   product_id?: string;
   product_name: string;
-  quantity: number;
+  product_code?: string;
   customer_name: string;
   customer_phone: string;
   customer_whatsapp?: string;
   customer_email?: string;
+  delivery_address?: string;
   delivery_location: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  postal_code?: string;
+  quantity?: number | string;
   preferred_size?: string;
   preferred_material?: string;
   preferred_finish?: string;
   special_requirements?: string;
   reference_image_url?: string;
   estimated_total?: number;
-  price_on_request: boolean;
-  status: OrderStatus;
-  email_notified: boolean;
-  whatsapp_notified: boolean;
-  email_error?: string;
-  whatsapp_error?: string;
+  price_on_request?: boolean;
   notes?: string;
+  status: OrderStatus;
+  status_notes?: string;
+  total_amount?: number;
+  estimated_delivery?: string;
+  tracking_number?: string;
   created_at?: string;
   updated_at?: string;
 }
@@ -148,58 +150,60 @@ export interface Order {
 export interface CustomOrder {
   id: string;
   request_id: string;
-  deity: DeityType;
-  material: string;
-  height?: string;
-  width?: string;
-  depth?: string;
+  deity: DeityType | string;
+  preferred_height?: number | string;
+  height?: number | string;
+  preferred_material?: string;
+  material?: string;
+  finish_preference?: string;
+  sanctum_type?: string;
+  delivery_location?: string;
+  width?: number | string;
+  depth?: number | string;
   pose?: string;
-  reference_images?: string[];
   requirements?: string;
   customer_name: string;
   customer_phone: string;
   customer_whatsapp?: string;
   customer_email?: string;
-  delivery_location?: string;
-  status: OrderStatus;
-  email_notified: boolean;
-  whatsapp_notified: boolean;
-  email_error?: string;
-  whatsapp_error?: string;
+  reference_images?: string[];
   notes?: string;
+  budget_range?: string;
+  status: OrderStatus | string;
+  admin_notes?: string;
   created_at?: string;
   updated_at?: string;
+}
+
+export interface TempleOrderItem {
+  deity: string;
+  height: string;
+  material: string;
+  count: number;
+  notes?: string;
 }
 
 export interface TempleOrder {
   id: string;
   request_id: string;
   organization_name: string;
-  location: string;
-  deity: string;
-  project_type:
-    | 'temple_idols'
-    | 'large_sculptures'
-    | 'temple_pillars'
-    | 'temple_doors'
-    | 'vimana_sculptures'
-    | 'restoration'
-    | 'bulk_orders';
-  required_height?: string;
-  material?: string;
-  quantity?: string;
-  reference_images?: string[];
-  expected_timeline?: string;
   contact_person: string;
   phone: string;
   email?: string;
+  location: string;
+  project_type?: string;
+  deity: string;
+  required_height?: string;
+  material?: string;
+  quantity?: number | string;
+  expected_timeline?: string;
   requirements?: string;
-  status: OrderStatus;
-  email_notified: boolean;
-  whatsapp_notified: boolean;
-  email_error?: string;
-  whatsapp_error?: string;
+  consecration_date?: string;
+  scope_summary?: string;
+  items?: TempleOrderItem[];
   notes?: string;
+  status: OrderStatus | string;
+  admin_notes?: string;
   created_at?: string;
   updated_at?: string;
 }
@@ -207,11 +211,12 @@ export interface TempleOrder {
 export interface OrderStatusHistory {
   id: string;
   order_id: string;
-  order_type: 'enquiry' | 'order' | 'custom' | 'temple';
+  order_type: 'regular' | 'custom' | 'temple';
+  status: string;
   previous_status?: string;
-  new_status: string;
-  changed_by?: string;
+  new_status?: string;
   notes?: string;
+  changed_by?: string;
   created_at?: string;
 }
 
@@ -221,11 +226,11 @@ export interface GalleryItem {
   description?: string;
   image_url: string;
   category: string;
-  deity?: string;
+  deity?: DeityType | string;
   material?: string;
-  product_id?: string;
-  is_featured: boolean;
-  sort_order: number;
+  featured: boolean;
+  is_featured?: boolean;
+  sort_order?: number;
   created_at?: string;
 }
 
@@ -233,10 +238,11 @@ export interface HomepageContent {
   id: string;
   hero_title: string;
   hero_subtitle: string;
-  hero_image_url?: string;
   hero_badge: string;
-  cta_banner_title: string;
-  cta_banner_subtitle: string;
+  announcement_banner?: string;
+  cta_banner_title?: string;
+  cta_banner_subtitle?: string;
+  created_at?: string;
   updated_at?: string;
 }
 
@@ -249,21 +255,24 @@ export interface AdminSettings {
   instagram_url: string;
   whatsapp_url: string;
   address: string;
-  email_notifications_enabled: boolean;
-  whatsapp_notifications_enabled: boolean;
+  email_notifications_enabled?: boolean;
+  whatsapp_notifications_enabled?: boolean;
   updated_at?: string;
 }
 
 export interface FilterState {
   deity: string;
   material: string;
-  category: string;
+  category?: string;
+  searchQuery?: string;
+  search?: string;
+  sortBy?: 'featured' | 'price-asc' | 'price-desc' | 'height-asc' | 'height-desc' | string;
+  availability?: string;
   minPrice?: number;
   maxPrice?: number;
-  minHeight?: number;
-  maxHeight?: number;
-  madeToOrder?: boolean;
-  customizable?: boolean;
-  searchQuery: string;
-  sortBy: 'featured' | 'price_asc' | 'price_desc' | 'height_asc' | 'height_desc' | 'newest';
+}
+
+export interface WishlistItem {
+  product: Product;
+  addedAt: string;
 }

@@ -6,8 +6,8 @@ import { useToast } from '@/context/ToastContext';
 import { Button } from '@/components/common/Button';
 
 export const AdminLoginPage: React.FC = () => {
-  const [email, setEmail] = useState('admin@vetriarts.com');
-  const [password, setPassword] = useState('vetriarts123');
+  const [email, setEmail] = useState('admin@sashthaarts.com');
+  const [password, setPassword] = useState('sashthaarts123');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -57,10 +57,10 @@ export const AdminLoginPage: React.FC = () => {
           <div className="text-center space-y-2">
             <div className="w-12 h-12 rounded-2xl bg-gold-500 p-0.5 mx-auto mb-2 shadow-gold-sm">
               <div className="w-full h-full bg-temple-950 rounded-[14px] flex items-center justify-center font-serif font-bold text-xl text-gold-400">
-                V
+                S
               </div>
             </div>
-            <h1 className="font-serif font-bold text-2xl text-sand-50">Vetri Arts &amp; Crafts</h1>
+            <h1 className="font-serif font-bold text-2xl text-sand-50">Sashtha Arts &amp; Crafts</h1>
             <p className="text-xs text-sand-400 uppercase tracking-widest font-mono">
               Protected Admin Portal
             </p>
@@ -86,7 +86,7 @@ export const AdminLoginPage: React.FC = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-temple-950/80 border border-sand-700 text-sand-100 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500"
-                  placeholder="admin@vetriarts.com"
+                  placeholder="admin@sashthaarts.com"
                 />
               </div>
             </div>

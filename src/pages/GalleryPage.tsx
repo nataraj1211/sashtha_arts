@@ -41,7 +41,7 @@ export const GalleryPage: React.FC = () => {
     if (selectedCategory === 'all') return gallery;
     return gallery.filter(
       (item) =>
-        item.category.toLowerCase() === selectedCategory.toLowerCase() ||
+        (item.category || '').toLowerCase() === selectedCategory.toLowerCase() ||
         item.deity?.toLowerCase() === selectedCategory.toLowerCase() ||
         item.material?.toLowerCase().includes(selectedCategory.toLowerCase())
     );
@@ -163,7 +163,7 @@ export const GalleryPage: React.FC = () => {
         onClose={() => setLightboxIndex(null)}
         images={lightboxImages}
         initialIndex={lightboxIndex || 0}
-        title={lightboxIndex !== null ? filteredItems[lightboxIndex]?.title : 'Vetri Arts Gallery'}
+        title={lightboxIndex !== null ? filteredItems[lightboxIndex]?.title : 'Sashtha Arts Gallery'}
       />
     </div>
   );

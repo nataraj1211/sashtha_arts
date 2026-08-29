@@ -14,7 +14,7 @@ export const AboutPage: React.FC = () => {
             <span>Sacred Lineage</span>
           </div>
           <h1 className="font-serif text-3xl sm:text-5xl font-bold text-temple-950">
-            About Vetri Arts &amp; Crafts
+            About Sashtha Arts &amp; Crafts
           </h1>
           <p className="text-sm sm:text-base text-temple-700 leading-relaxed">
             Rooted in the heartland of South Indian sculpture at Swamimalai and Mahabalipuram, preserving the timeless craft of lost-wax bronze casting and Agama Shastra stone sculpting.
@@ -41,7 +41,7 @@ export const AboutPage: React.FC = () => {
             A Devotional Commitment to Traditional Shilpa Shastra
           </h2>
           <p className="text-sm text-temple-800 leading-relaxed">
-            <strong>Vetri Arts &amp; Crafts</strong> was founded with a singular sacred purpose: to keep alive the thousand-year-old metallurgical and sculpting traditions of Tamil Nadu without compromising on authenticity, metal purity, or iconometric accuracy.
+            <strong>Sashtha Arts &amp; Crafts</strong> was founded with a singular sacred purpose: to keep alive the thousand-year-old metallurgical and sculpting traditions of Tamil Nadu without compromising on authenticity, metal purity, or iconometric accuracy.
           </p>
           <p className="text-sm text-temple-800 leading-relaxed">
             Every Hindu God statue we sculpt—from Lord Murugan holding His divine Vel to the cosmic dance of Lord Nataraja—is crafted with deep bhakti (devotion) and rigorous discipline by hereditary Vishwakarma sthapathis who have practiced this craft for generations.

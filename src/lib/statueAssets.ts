@@ -1,4 +1,4 @@
-// Sacred Hindu God Statue Assets & 4-Side Angle Imagery for Vetri Arts & Crafts
+// Sacred Hindu God Statue Assets & 4-Side Angle Imagery for Sashtha Arts & Crafts
 import type { DeityType, ProductImage } from '@/types';
 
 export const STATUE_ASSETS = {

@@ -64,9 +64,9 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       <div className="md:hidden bg-temple-950 text-sand-50 p-4 flex items-center justify-between border-b border-gold-500/20">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded bg-gold-500 text-temple-950 flex items-center justify-center font-serif font-bold text-sm">
-            V
+            S
           </div>
-          <span className="font-serif font-bold text-base text-gold-300">Vetri Arts Admin</span>
+          <span className="font-serif font-bold text-base text-gold-300">Sashtha Arts Admin</span>
         </div>
         <button
           onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
@@ -87,12 +87,12 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           <div className="flex items-center gap-3 pb-6 border-b border-temple-800">
             <div className="w-10 h-10 rounded-xl bg-gold-500 p-0.5 shrink-0">
               <div className="w-full h-full bg-temple-950 rounded-[10px] flex items-center justify-center">
-                <span className="font-serif font-bold text-lg text-gold-400">V</span>
+                <span className="font-serif font-bold text-lg text-gold-400">S</span>
               </div>
             </div>
             <div>
               <h2 className="font-serif font-bold text-base text-gold-300 leading-tight">
-                Vetri Arts
+                Sashtha Arts
               </h2>
               <span className="text-[10px] text-sand-400 uppercase tracking-widest font-mono">
                 Admin Console

@@ -17,7 +17,7 @@ export const OurCraftPage: React.FC = () => {
             Our Ancient Craft &amp; Methodology
           </h1>
           <p className="text-sm sm:text-base text-temple-700 leading-relaxed">
-            Discover the thousands-year-old Madhuchishtavidhana (Lost-Wax Bronze Casting) and Agama Shastra guidelines preserved by Vetri Arts &amp; Crafts master sthapathis.
+            Discover the thousands-year-old Madhuchishtavidhana (Lost-Wax Bronze Casting) and Agama Shastra guidelines preserved by Sashtha Arts &amp; Crafts master sthapathis.
           </p>
         </div>
 
@@ -140,7 +140,7 @@ export const OurCraftPage: React.FC = () => {
             </h3>
           </div>
           <p className="text-sm text-sand-200/90 leading-relaxed">
-            All statues commissioned from Vetri Arts &amp; Crafts are delivered clean, solid, resonant, and non-magnetized. They are fully prepared for ceremonial Abhishekam, Yajna consecration, and Prana Pratishtha rituals conducted by your temple priests.
+            All statues commissioned from Sashtha Arts &amp; Crafts are delivered clean, solid, resonant, and non-magnetized. They are fully prepared for ceremonial Abhishekam, Yajna consecration, and Prana Pratishtha rituals conducted by your temple priests.
           </p>
 
           <div className="pt-2 flex flex-wrap items-center gap-4">

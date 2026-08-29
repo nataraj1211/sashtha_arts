@@ -2,88 +2,74 @@ import { createClient } from '@supabase/supabase-js';
 import type {
   Product,
   Category,
-  GalleryItem,
   Enquiry,
   Order,
   CustomOrder,
   TempleOrder,
-  OrderStatusHistory,
+  GalleryItem,
   HomepageContent,
   AdminSettings,
+  OrderStatusHistory,
+  EnquiryStatus,
+  OrderStatus,
 } from '@/types';
+import { generateFourSideImages } from '@/lib/statueAssets';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
 export const isSupabaseConfigured = Boolean(
   supabaseUrl &&
-  supabaseAnonKey &&
-  supabaseUrl !== 'https://your-project.supabase.co' &&
-  supabaseAnonKey !== 'your-anon-key-here'
+    supabaseAnonKey &&
+    !supabaseUrl.includes('your-project') &&
+    !supabaseAnonKey.includes('your-anon-key')
 );
 
-export const supabase = isSupabaseConfigured
-  ? createClient(supabaseUrl, supabaseAnonKey)
-  : null;
+export const supabase = createClient(
+  isSupabaseConfigured ? supabaseUrl : 'https://placeholder.supabase.co',
+  isSupabaseConfigured ? supabaseAnonKey : 'placeholder-anon-key'
+);
 
-// ============================================================================
-// INITIAL SEED DATA FOR SEAMLESS RUNTIME / LOCAL / PREVIEW EXECUTION
-// ============================================================================
+export const INITIAL_SETTINGS: AdminSettings = {
+  id: 's-1',
+  business_name: 'Sashtha Arts & Crafts',
+  admin_email: import.meta.env.VITE_ADMIN_EMAIL || 'contact@sashthaarts.com',
+  admin_whatsapp: import.meta.env.VITE_ADMIN_WHATSAPP_NUMBER || '+919342839218',
+  business_phone: '+919342839218',
+  instagram_url: 'https://instagram.com/sashthaartsncrafts',
+  whatsapp_url: 'https://wa.me/919342839218',
+  address: 'Swamimalai / Mahabalipuram Heritage Workshop, Tamil Nadu, India',
+  email_notifications_enabled: true,
+  whatsapp_notifications_enabled: true,
+};
 
-export const INITIAL_CATEGORIES: Category[] = [
-  {
-    id: 'c1000000-0000-0000-0000-000000000001',
-    slug: 'panchaloha-statues',
-    name: 'Panchaloha Statues',
-    description: 'Sacred five-metal alloy statues cast via ancient lost-wax technique (Madhuchishtavidhana).',
-    sort_order: 1,
-  },
-  {
-    id: 'c1000000-0000-0000-0000-000000000002',
-    slug: 'bronze-sculptures',
-    name: 'Bronze Sculptures',
-    description: 'Traditional Chola style lost-wax cast bronze idols for sanctums and temples.',
-    sort_order: 2,
-  },
-  {
-    id: 'c1000000-0000-0000-0000-000000000003',
-    slug: 'brass-idols',
-    name: 'Brass Idols',
-    description: 'Finely engraved brass statues with rich antique polish and sacred details.',
-    sort_order: 3,
-  },
-  {
-    id: 'c1000000-0000-0000-0000-000000000004',
-    slug: 'black-stone-sculptures',
-    name: 'Black Granite Stone',
-    description: 'Hand-chiselled Krishna Shila and black granite murtis according to Shilpa Shastra.',
-    sort_order: 4,
-  },
-  {
-    id: 'c1000000-0000-0000-0000-000000000005',
-    slug: 'wood-carvings',
-    name: 'Sacred Wood Carvings',
-    description: 'Virasana and Ananda Nilayam style idols in solid Country Teak and Rosewood.',
-    sort_order: 5,
-  },
-];
+export const INITIAL_HOMEPAGE: HomepageContent = {
+  id: 'h-1',
+  hero_title: 'Sacred Art, Crafted by Hand.',
+  hero_subtitle:
+    'Discover beautifully handcrafted South Indian God statues made with traditional artistry and timeless craftsmanship.',
+  hero_badge: 'Traditional Shilpa Shastra Excellence',
+  announcement_banner:
+    '✦ Auspicious Panguni Uthiram Special Murugan & Nataraja Sanctum Castings Now Available ✦',
+};
 
 export const INITIAL_PRODUCTS: Product[] = [
   {
-    id: 'p1000000-0000-0000-0000-000000000001',
+    id: 'p-murugan-swaminatha',
     slug: 'traditional-lord-murugan-swaminatha-statue',
-    product_code: 'VAC-MRG-001',
-    name: 'Lord Murugan (Swaminatha Swami) Handcrafted Panchaloha Statue',
+    product_code: 'MUR-SW-24',
+    name: 'Lord Swaminatha Murugan Panchaloha Statue',
     deity: 'murugan',
-    category_id: 'c1000000-0000-0000-0000-000000000001',
+    category_id: 'cat-bronze',
     category_name: 'Panchaloha Statues',
-    description: 'A magnificent, divinely energized representation of Lord Murugan (Karthikeya / Subramanya) holding the sacred Vel and displaying Abhaya Mudra. Mastercrafted in traditional Swamimalai Panchaloha (Gold, Silver, Copper, Zinc, Lead alloy) using the ancient Madhuchishtavidhana (lost-wax) casting process strictly conforming to Shilpa Shastra guidelines. Features an intricately sculpted Mayil (Peacock) vahana at the base.',
-    material: 'Panchaloha (5-Metal Sacred Alloy)',
+    description:
+      'Handcrafted using the ancient lost-wax casting technique conforming to authentic Shilpa Shastra proportions. Features the sacred Vel, lotus pedestal (Padma Peedam), and intricate divine ornaments.',
+    material: 'Panchaloha (5-Metal Alloy)',
     height: 24,
-    width: 11,
-    depth: 8,
-    weight: 14.5,
-    finish: 'Traditional Antique Patina & Temple Gold Polish',
+    width: 12,
+    depth: 9,
+    weight: 18.5,
+    finish: 'Antique Temple Patina',
     price: 68500,
     price_on_request: false,
     availability: 'in_stock',
@@ -92,131 +78,51 @@ export const INITIAL_PRODUCTS: Product[] = [
     featured: true,
     sort_order: 1,
     primary_image: '/images/statues/murugan.jpg',
-    images: [
-      {
-        id: 'img-1-1',
-        product_id: 'p1000000-0000-0000-0000-000000000001',
-        image_url: '/images/statues/murugan.jpg',
-        view_type: 'front',
-        sort_order: 1,
-        is_primary: true,
-      },
-      {
-        id: 'img-1-2',
-        product_id: 'p1000000-0000-0000-0000-000000000001',
-        image_url: '/images/statues/murugan.jpg',
-        view_type: 'left',
-        sort_order: 2,
-        is_primary: false,
-      },
-      {
-        id: 'img-1-3',
-        product_id: 'p1000000-0000-0000-0000-000000000001',
-        image_url: '/images/statues/murugan.jpg',
-        view_type: 'right',
-        sort_order: 3,
-        is_primary: false,
-      },
-      {
-        id: 'img-1-4',
-        product_id: 'p1000000-0000-0000-0000-000000000001',
-        image_url: '/images/statues/murugan.jpg',
-        view_type: 'back',
-        sort_order: 4,
-        is_primary: false,
-      },
-      {
-        id: 'img-1-5',
-        product_id: 'p1000000-0000-0000-0000-000000000001',
-        image_url: '/images/statues/murugan.jpg',
-        view_type: 'detail',
-        sort_order: 5,
-        is_primary: false,
-      },
-      {
-        id: 'img-1-6',
-        product_id: 'p1000000-0000-0000-0000-000000000001',
-        image_url: '/images/statues/murugan.jpg',
-        view_type: 'lifestyle',
-        sort_order: 6,
-        is_primary: false,
-      },
-    ],
+    images: generateFourSideImages('p-murugan-swaminatha', 'murugan', 'Lord Swaminatha Murugan'),
   },
   {
-    id: 'p1000000-0000-0000-0000-000000000002',
+    id: 'p-nataraja-tandava',
     slug: 'divine-ananda-tandava-nataraja-bronze-sculpture',
-    product_code: 'VAC-SHV-002',
-    name: 'Lord Nataraja (Cosmic Dance) Lost-Wax Chola Bronze',
+    product_code: 'SHV-NAT-36',
+    name: 'Cosmic Ananda Tandava Nataraja Bronze Idol',
     deity: 'shiva',
-    category_id: 'c1000000-0000-0000-0000-000000000002',
-    category_name: 'Bronze Sculptures',
-    description: 'Iconic South Indian Chola style Nataraja depicting the cosmic Ananda Tandava within the flaming Prabha-mandala. Lord Shiva balances upon the demon Apasmara, holding the Damaru (creation) and Agni (transformation). Hand-poured lost-wax cast bronze with magnificent facial expression and divine proportions.',
-    material: 'Chola Lost-Wax Cast Bronze',
-    height: 30,
-    width: 24,
-    depth: 10,
-    weight: 22.0,
-    finish: 'Deep Temple Bronze Patina',
-    price: 95000,
+    category_id: 'cat-bronze',
+    category_name: 'Lost-Wax Bronze Sculptures',
+    description:
+      'The supreme icon of Chola artistic mastery. Shiva dancing within the flaming Prabhamandala, subduing Muyalaka (ignorance) with divine flow, Damaru in hand and Agni flame in palm.',
+    material: 'Lost-Wax Bronze',
+    height: 36,
+    width: 28,
+    depth: 14,
+    weight: 34.0,
+    finish: 'Chola Heritage Brown Patina',
+    price: 145000,
     price_on_request: false,
-    availability: 'in_stock',
-    made_to_order: false,
+    availability: 'made_to_order',
+    made_to_order: true,
     customizable: true,
     featured: true,
     sort_order: 2,
     primary_image: '/images/statues/nataraja.jpg',
-    images: [
-      {
-        id: 'img-2-1',
-        product_id: 'p1000000-0000-0000-0000-000000000002',
-        image_url: '/images/statues/nataraja.jpg',
-        view_type: 'front',
-        sort_order: 1,
-        is_primary: true,
-      },
-      {
-        id: 'img-2-2',
-        product_id: 'p1000000-0000-0000-0000-000000000002',
-        image_url: '/images/statues/nataraja.jpg',
-        view_type: 'left',
-        sort_order: 2,
-        is_primary: false,
-      },
-      {
-        id: 'img-2-3',
-        product_id: 'p1000000-0000-0000-0000-000000000002',
-        image_url: '/images/statues/nataraja.jpg',
-        view_type: 'right',
-        sort_order: 3,
-        is_primary: false,
-      },
-      {
-        id: 'img-2-4',
-        product_id: 'p1000000-0000-0000-0000-000000000002',
-        image_url: '/images/statues/nataraja.jpg',
-        view_type: 'back',
-        sort_order: 4,
-        is_primary: false,
-      },
-    ],
+    images: generateFourSideImages('p-nataraja-tandava', 'shiva', 'Ananda Tandava Nataraja'),
   },
   {
-    id: 'p1000000-0000-0000-0000-000000000003',
-    slug: 'lord-maha-ganapathi-vinayagar-brass-statue',
-    product_code: 'VAC-VNY-003',
-    name: 'Maha Ganapathi (Vinayagar) with Prabhavali Handcrafted Brass Idol',
+    id: 'p-vinayagar-siddhi',
+    slug: 'maha-siddhi-ganapathi-brass-idol',
+    product_code: 'VIN-SID-18',
+    name: 'Maha Siddhi Vinayagar Heavy Brass Idol',
     deity: 'vinayagar',
-    category_id: 'c1000000-0000-0000-0000-000000000003',
-    category_name: 'Brass Idols',
-    description: 'Auspicious seated Maha Ganapathi featuring a regal arch (Prabhavali), holding the sacred Gada, Pasha, Ankusha, and the Modaka in His curved trunk (Valampuri / Idampuri posture). Ideal for home sanctums, temple altars, and auspicious inaugural ceremonies.',
-    material: 'Solid Pure Brass',
+    category_id: 'cat-brass',
+    category_name: 'Heavy Brass Murtis',
+    description:
+      'Solid heavyweight casting of Lord Ganesha seated upon a double lotus throne holding Modaka, Pasha, and Ankusha. Perfect for sanctums, pooja rooms, and temple entryways.',
+    material: 'Brass',
     height: 18,
-    width: 12,
+    width: 11,
     depth: 9,
-    weight: 11.2,
-    finish: 'Antique Golden Sandalwood Glow',
-    price: 32000,
+    weight: 12.8,
+    finish: 'Polished Brass & Lacquer',
+    price: 34000,
     price_on_request: false,
     availability: 'in_stock',
     made_to_order: false,
@@ -224,806 +130,603 @@ export const INITIAL_PRODUCTS: Product[] = [
     featured: true,
     sort_order: 3,
     primary_image: '/images/statues/vinayagar.jpg',
-    images: [
-      {
-        id: 'img-3-1',
-        product_id: 'p1000000-0000-0000-0000-000000000003',
-        image_url: '/images/statues/vinayagar.jpg',
-        view_type: 'front',
-        sort_order: 1,
-        is_primary: true,
-      },
-      {
-        id: 'img-3-2',
-        product_id: 'p1000000-0000-0000-0000-000000000003',
-        image_url: '/images/statues/vinayagar.jpg',
-        view_type: 'left',
-        sort_order: 2,
-        is_primary: false,
-      },
-      {
-        id: 'img-3-3',
-        product_id: 'p1000000-0000-0000-0000-000000000003',
-        image_url: '/images/statues/vinayagar.jpg',
-        view_type: 'right',
-        sort_order: 3,
-        is_primary: false,
-      },
-      {
-        id: 'img-3-4',
-        product_id: 'p1000000-0000-0000-0000-000000000003',
-        image_url: '/images/statues/vinayagar.jpg',
-        view_type: 'back',
-        sort_order: 4,
-        is_primary: false,
-      },
-    ],
+    images: generateFourSideImages('p-vinayagar-siddhi', 'vinayagar', 'Maha Siddhi Vinayagar'),
   },
   {
-    id: 'p1000000-0000-0000-0000-000000000004',
-    slug: 'sri-mariamman-devi-panchaloha-idol',
-    product_code: 'VAC-AMM-004',
-    name: 'Goddess Sri Mariamman Devi Sacred Panchaloha Idol',
-    deity: 'amman',
-    category_id: 'c1000000-0000-0000-0000-000000000001',
-    category_name: 'Panchaloha Statues',
-    description: 'Divine Mother Sri Mariamman seated majestically with five-headed serpent canopy (Nagakudai), holding the Trishula, Udukkai, Kapala, and sword. Masterfully detailed ornaments, kiritam, and flowing saree drapery sculpted by hereditary sthapathis.',
-    material: 'Panchaloha (5-Metal Sacred Alloy)',
-    height: 21,
-    width: 12,
-    depth: 9,
-    weight: 13.0,
-    finish: 'Sacred Temple Gold & Red Sindoor Accent',
-    price: 59000,
-    price_on_request: false,
-    availability: 'in_stock',
-    made_to_order: false,
-    customizable: true,
-    featured: true,
-    sort_order: 4,
-    primary_image: '/images/statues/amman.jpg',
-    images: [
-      {
-        id: 'img-4-1',
-        product_id: 'p1000000-0000-0000-0000-000000000004',
-        image_url: '/images/statues/amman.jpg',
-        view_type: 'front',
-        sort_order: 1,
-        is_primary: true,
-      },
-      {
-        id: 'img-4-2',
-        product_id: 'p1000000-0000-0000-0000-000000000004',
-        image_url: '/images/statues/amman.jpg',
-        view_type: 'left',
-        sort_order: 2,
-        is_primary: false,
-      },
-      {
-        id: 'img-4-3',
-        product_id: 'p1000000-0000-0000-0000-000000000004',
-        image_url: '/images/statues/amman.jpg',
-        view_type: 'right',
-        sort_order: 3,
-        is_primary: false,
-      },
-      {
-        id: 'img-4-4',
-        product_id: 'p1000000-0000-0000-0000-000000000004',
-        image_url: '/images/statues/amman.jpg',
-        view_type: 'back',
-        sort_order: 4,
-        is_primary: false,
-      },
-    ],
-  },
-  {
-    id: 'p1000000-0000-0000-0000-000000000005',
-    slug: 'lord-venkateswara-perumal-black-granite-sculpture',
-    product_code: 'VAC-PRM-005',
-    name: 'Lord Venkateswara (Balaji Perumal) Hand-Chiseled Black Granite',
+    id: 'p-perumal-balaji',
+    slug: 'sri-venkateswara-perumal-panchaloha-murti',
+    product_code: 'PRM-BAL-30',
+    name: 'Lord Venkateswara Balaji Panchaloha Murti',
     deity: 'perumal',
-    category_id: 'c1000000-0000-0000-0000-000000000004',
-    category_name: 'Black Granite Stone',
-    description: 'Sublime depiction of Lord Srinivasa (Tirupati Balaji) hand-chiselled from dense, monolithic Krishna Shila black granite stone. Features sacred Shankha, Chakra, and Katyavalambita mudra along with exquisite stone jewellery carving.',
-    material: 'Monolithic Black Granite Stone',
-    height: 36,
-    width: 18,
-    depth: 12,
-    weight: 65.0,
-    finish: 'Natural Temple Oil Treated Black Finish',
-    price: 0,
-    price_on_request: true,
+    category_id: 'cat-bronze',
+    category_name: 'Panchaloha Statues',
+    description:
+      'Magnificent Tirupati Balaji Murti with finely etched Shankha, Chakra, Varada Hasta, and richly detailed Makara Toranam backdrop.',
+    material: 'Panchaloha (5-Metal Alloy)',
+    height: 30,
+    width: 16,
+    depth: 10,
+    weight: 29.5,
+    finish: 'Temple Black & Antique Gold',
+    price: 112000,
+    price_on_request: false,
     availability: 'made_to_order',
     made_to_order: true,
     customizable: true,
     featured: true,
-    sort_order: 5,
+    sort_order: 4,
     primary_image: '/images/statues/perumal.jpg',
-    images: [
-      {
-        id: 'img-5-1',
-        product_id: 'p1000000-0000-0000-0000-000000000005',
-        image_url: '/images/statues/perumal.jpg',
-        view_type: 'front',
-        sort_order: 1,
-        is_primary: true,
-      },
-      {
-        id: 'img-5-2',
-        product_id: 'p1000000-0000-0000-0000-000000000005',
-        image_url: '/images/statues/perumal.jpg',
-        view_type: 'left',
-        sort_order: 2,
-        is_primary: false,
-      },
-      {
-        id: 'img-5-3',
-        product_id: 'p1000000-0000-0000-0000-000000000005',
-        image_url: '/images/statues/perumal.jpg',
-        view_type: 'right',
-        sort_order: 3,
-        is_primary: false,
-      },
-      {
-        id: 'img-5-4',
-        product_id: 'p1000000-0000-0000-0000-000000000005',
-        image_url: '/images/statues/perumal.jpg',
-        view_type: 'back',
-        sort_order: 4,
-        is_primary: false,
-      },
-    ],
+    images: generateFourSideImages('p-perumal-balaji', 'perumal', 'Lord Venkateswara Balaji'),
   },
   {
-    id: 'p1000000-0000-0000-0000-000000000006',
-    slug: 'venugopala-krishna-with-cow-bronze-idol',
-    product_code: 'VAC-KRS-006',
-    name: 'Venugopala Krishna with Kamadhenu Cow Handcrafted Bronze',
-    deity: 'krishna',
-    category_id: 'c1000000-0000-0000-0000-000000000002',
-    category_name: 'Bronze Sculptures',
-    description: 'Enchanting Lord Krishna in Tribhanga pose playing the divine flute (Venu) alongside a loving calf and cow under the Kadamba tree. Cast using high-purity bronze with soft facial serenity and peacock feather crown (Mayil Peeli).',
-    material: 'Traditional Solid Bronze',
-    height: 20,
+    id: 'p-mariamman-devi',
+    slug: 'sri-maha-mariamman-bronze-vigraham',
+    product_code: 'AMM-MAR-21',
+    name: 'Sri Maha Mariamman Bronze Vigraham',
+    deity: 'amman',
+    category_id: 'cat-bronze',
+    category_name: 'Lost-Wax Bronze Sculptures',
+    description:
+      'Goddess Mariamman in fierce yet compassionate pose with sacred Trishul, Kapala, and flame crown. Sculpted following Agama guidelines for temple consecration.',
+    material: 'Lost-Wax Bronze',
+    height: 21,
     width: 13,
     depth: 8,
-    weight: 9.8,
-    finish: 'Warm Honey Bronze & Antique Dark Tone',
-    price: 46500,
+    weight: 15.0,
+    finish: 'Antique Patina',
+    price: 54000,
     price_on_request: false,
     availability: 'in_stock',
     made_to_order: false,
     customizable: true,
-    featured: true,
-    sort_order: 6,
-    primary_image: '/images/statues/krishna.jpg',
-    images: [
-      {
-        id: 'img-6-1',
-        product_id: 'p1000000-0000-0000-0000-000000000006',
-        image_url: '/images/statues/krishna.jpg',
-        view_type: 'front',
-        sort_order: 1,
-        is_primary: true,
-      },
-      {
-        id: 'img-6-2',
-        product_id: 'p1000000-0000-0000-0000-000000000006',
-        image_url: '/images/statues/krishna.jpg',
-        view_type: 'left',
-        sort_order: 2,
-        is_primary: false,
-      },
-      {
-        id: 'img-6-3',
-        product_id: 'p1000000-0000-0000-0000-000000000006',
-        image_url: '/images/statues/krishna.jpg',
-        view_type: 'right',
-        sort_order: 3,
-        is_primary: false,
-      },
-      {
-        id: 'img-6-4',
-        product_id: 'p1000000-0000-0000-0000-000000000006',
-        image_url: '/images/statues/krishna.jpg',
-        view_type: 'back',
-        sort_order: 4,
-        is_primary: false,
-      },
-    ],
+    featured: false,
+    sort_order: 5,
+    primary_image: '/images/statues/amman.jpg',
+    images: generateFourSideImages('p-mariamman-devi', 'amman', 'Sri Maha Mariamman'),
   },
   {
-    id: 'p1000000-0000-0000-0000-000000000007',
-    slug: 'swami-ayyappan-panchaloha-sanctum-murti',
-    product_code: 'VAC-AYY-007',
-    name: 'Swami Ayyappan (Dharma Sastha) Panchaloha Sanctum Murti',
+    id: 'p-krishna-venugopala',
+    slug: 'sri-venugopala-krishna-bronze-statue',
+    product_code: 'KRS-VNU-24',
+    name: 'Sri Venugopala Krishna with Sacred Cow',
+    deity: 'krishna',
+    category_id: 'cat-bronze',
+    category_name: 'Lost-Wax Bronze Sculptures',
+    description:
+      'Lord Krishna playing the enchanting flute with cross-legged Tribhanga posture, accompanied by the calf Kamadhenu.',
+    material: 'Lost-Wax Bronze',
+    height: 24,
+    width: 14,
+    depth: 10,
+    weight: 19.2,
+    finish: 'Natural Matte Bronze',
+    price: 62000,
+    price_on_request: false,
+    availability: 'in_stock',
+    made_to_order: false,
+    customizable: true,
+    featured: false,
+    sort_order: 6,
+    primary_image: '/images/statues/krishna.jpg',
+    images: generateFourSideImages('p-krishna-venugopala', 'krishna', 'Sri Venugopala Krishna'),
+  },
+  {
+    id: 'p-ayyappan-panchaloha',
+    slug: 'swami-ayyappan-panchaloha-vigraham',
+    product_code: 'AYY-SW-18',
+    name: 'Swami Ayyappan Panchaloha Vigraham',
     deity: 'ayyappan',
-    category_id: 'c1000000-0000-0000-0000-000000000001',
+    category_id: 'cat-bronze',
     category_name: 'Panchaloha Statues',
-    description: 'Sacred Lord Ayyappan seated in Yogarudha posture with knee band (Yoga Patta) on a tiered lotus pedestal (Padma Peedam). Imbued with tranquility, spiritual depth, and flawless anatomical precision according to Sabarimala iconometry.',
-    material: 'Panchaloha (5-Metal Sacred Alloy)',
-    height: 16,
-    width: 10,
+    description:
+      'Sacred Manikandan seated in Yogapatta posture on Peedam with Chin Mudra and serene face. Highly revered for Sabarimala devotion.',
+    material: 'Panchaloha (5-Metal Alloy)',
+    height: 18,
+    width: 11,
+    depth: 9,
+    weight: 14.5,
+    finish: 'Polished Gold Patina',
+    price: 49000,
+    price_on_request: false,
+    availability: 'in_stock',
+    made_to_order: false,
+    customizable: true,
+    featured: false,
+    sort_order: 7,
+    primary_image: '/images/statues/ayyappan.jpg',
+    images: generateFourSideImages('p-ayyappan-panchaloha', 'ayyappan', 'Swami Ayyappan'),
+  },
+  {
+    id: 'p-anjaneyar-veera',
+    slug: 'veera-anjaneyar-hanuman-statue',
+    product_code: 'ANJ-VR-24',
+    name: 'Sri Veera Anjaneyar Hanuman Murti',
+    deity: 'anjaneyar',
+    category_id: 'cat-brass',
+    category_name: 'Heavy Brass Murtis',
+    description:
+      'Valorous Lord Hanuman with hands joined in humble Anjali Mudra, auspicious bell attached to the tail curving over crown.',
+    material: 'Brass',
+    height: 24,
+    width: 12,
     depth: 8,
-    weight: 7.8,
-    finish: 'Sacred Antique Golden Patina',
+    weight: 16.0,
+    finish: 'Antique Brass Patina',
     price: 42000,
     price_on_request: false,
     availability: 'in_stock',
     made_to_order: false,
     customizable: true,
-    featured: true,
-    sort_order: 7,
-    primary_image: '/images/statues/ayyappan.jpg',
-    images: [
-      {
-        id: 'img-7-1',
-        product_id: 'p1000000-0000-0000-0000-000000000007',
-        image_url: '/images/statues/ayyappan.jpg',
-        view_type: 'front',
-        sort_order: 1,
-        is_primary: true,
-      },
-      {
-        id: 'img-7-2',
-        product_id: 'p1000000-0000-0000-0000-000000000007',
-        image_url: '/images/statues/ayyappan.jpg',
-        view_type: 'left',
-        sort_order: 2,
-        is_primary: false,
-      },
-      {
-        id: 'img-7-3',
-        product_id: 'p1000000-0000-0000-0000-000000000007',
-        image_url: '/images/statues/ayyappan.jpg',
-        view_type: 'right',
-        sort_order: 3,
-        is_primary: false,
-      },
-      {
-        id: 'img-7-4',
-        product_id: 'p1000000-0000-0000-0000-000000000007',
-        image_url: '/images/statues/ayyappan.jpg',
-        view_type: 'back',
-        sort_order: 4,
-        is_primary: false,
-      },
-    ],
-  },
-  {
-    id: 'p1000000-0000-0000-0000-000000000008',
-    slug: 'veera-anjaneyar-hanuman-brass-statue',
-    product_code: 'VAC-HNM-008',
-    name: 'Veera Anjaneyar (Lord Hanuman) Hand-Carved Heavy Brass Idol',
-    deity: 'anjaneyar',
-    category_id: 'c1000000-0000-0000-0000-000000000003',
-    category_name: 'Brass Idols',
-    description: 'Majestic Lord Hanuman in courageous posture with Sanjeevi mountain in hand and Gada over shoulder, tail coiled with sacred bell at the tip. Represents supreme devotion, strength, and protection for the home or temple.',
-    material: 'Heavy Pure Brass',
-    height: 22,
-    width: 11,
-    depth: 9,
-    weight: 12.5,
-    finish: 'Dual Tone Gold & Antique Dark Brass',
-    price: 38000,
-    price_on_request: false,
-    availability: 'in_stock',
-    made_to_order: false,
-    customizable: true,
-    featured: true,
+    featured: false,
     sort_order: 8,
     primary_image: '/images/statues/anjaneyar.jpg',
-    images: [
-      {
-        id: 'img-8-1',
-        product_id: 'p1000000-0000-0000-0000-000000000008',
-        image_url: '/images/statues/anjaneyar.jpg',
-        view_type: 'front',
-        sort_order: 1,
-        is_primary: true,
-      },
-      {
-        id: 'img-8-2',
-        product_id: 'p1000000-0000-0000-0000-000000000008',
-        image_url: '/images/statues/anjaneyar.jpg',
-        view_type: 'left',
-        sort_order: 2,
-        is_primary: false,
-      },
-      {
-        id: 'img-8-3',
-        product_id: 'p1000000-0000-0000-0000-000000000008',
-        image_url: '/images/statues/anjaneyar.jpg',
-        view_type: 'right',
-        sort_order: 3,
-        is_primary: false,
-      },
-      {
-        id: 'img-8-4',
-        product_id: 'p1000000-0000-0000-0000-000000000008',
-        image_url: '/images/statues/anjaneyar.jpg',
-        view_type: 'back',
-        sort_order: 4,
-        is_primary: false,
-      },
-    ],
+    images: generateFourSideImages('p-anjaneyar-veera', 'anjaneyar', 'Sri Veera Anjaneyar'),
   },
 ];
 
 export const INITIAL_GALLERY: GalleryItem[] = [
   {
     id: 'g-1',
-    title: 'Handcrafted Lord Murugan with Sacred Vel',
-    description: 'Mastercrafted Swamimalai Panchaloha Murugan statue with Mayil peacock vahana.',
+    title: 'Panchaloha Lord Murugan Consecration',
+    description: '4-foot lost wax casting consecrated for a temple sanctum in Tamil Nadu.',
     image_url: '/images/statues/murugan.jpg',
-    category: 'murugan',
+    category: 'Consecrations',
     deity: 'murugan',
     material: 'Panchaloha',
-    is_featured: true,
+    featured: true,
     sort_order: 1,
   },
   {
     id: 'g-2',
-    title: 'Grand Chola Bronze Nataraja Cosmic Dance',
-    description: 'Ananda Tandava Nataraja within the flaming prabhamandala for temple sanctum.',
+    title: 'Chola Style Ananda Tandava Nataraja',
+    description: 'Masterwork bronze featuring 32 flaming tongues in the sacred Prabhavali.',
     image_url: '/images/statues/nataraja.jpg',
-    category: 'nataraja',
+    category: 'Museum Quality',
     deity: 'shiva',
-    material: 'Bronze',
-    is_featured: true,
+    material: 'Lost-Wax Bronze',
+    featured: true,
     sort_order: 2,
   },
   {
     id: 'g-3',
-    title: 'Solid Brass Maha Vinayagar on Lotus Peedam',
-    description: 'Auspicious seated Lord Ganesha with modaka and traditional temple arch.',
-    image_url: '/images/statues/vinayagar.jpg',
-    category: 'vinayagar',
-    deity: 'vinayagar',
-    material: 'Brass',
-    is_featured: true,
+    title: 'Sri Venkateswara Perumal Sanctum Murti',
+    description: 'Intricate kiritam and abhaya hasta detail cast for private sanctum.',
+    image_url: '/images/statues/perumal.jpg',
+    category: 'Custom Sanctums',
+    deity: 'perumal',
+    material: 'Panchaloha',
+    featured: true,
     sort_order: 3,
   },
   {
     id: 'g-4',
-    title: 'Panchaloha Sri Mariamman Devi Sanctum Murti',
-    description: 'Divine Mother Mariamman with sacred trishul, nagakudai, and crown.',
-    image_url: '/images/statues/amman.jpg',
-    category: 'amman',
-    deity: 'amman',
-    material: 'Panchaloha',
-    is_featured: true,
+    title: 'Traditional Swamimalai Workshop',
+    description: 'Master sthapatis performing crucible metal pouring at 1200°C.',
+    image_url: '/images/statues/workshop.jpg',
+    category: 'Workshop & Craft',
+    material: 'Bronze',
+    featured: true,
     sort_order: 4,
   },
   {
     id: 'g-5',
-    title: 'Master Sthapathi Lost-Wax Hand Carving',
-    description: 'Hereditary sthapathi hand-chiselling bronze statue in our Swamimalai workshop.',
-    image_url: '/images/statues/workshop.jpg',
-    category: 'workshop',
-    deity: 'all',
-    material: 'Bronze',
-    is_featured: true,
+    title: 'Granite Temple Sanctum Work',
+    description: 'Hand-chiseled monolithic Krishna Shila granite stone temple pillars.',
+    image_url: '/images/statues/temple.jpg',
+    category: 'Temple Architecture',
+    material: 'Monolithic Granite Stone',
+    featured: true,
     sort_order: 5,
   },
   {
     id: 'g-6',
-    title: 'Lord Venkateswara Balaji Perumal Murti',
-    description: 'Divine Perumal with Shankha, Chakra, and traditional temple gold finish.',
-    image_url: '/images/statues/perumal.jpg',
-    category: 'perumal',
-    deity: 'perumal',
-    material: 'Bronze',
-    is_featured: true,
-    sort_order: 6,
-  },
-  {
-    id: 'g-7',
-    title: 'Venugopala Krishna Playing Flute',
-    description: 'Enchanting bronze Krishna standing gracefully alongside sacred cow.',
-    image_url: '/images/statues/krishna.jpg',
-    category: 'krishna',
-    deity: 'krishna',
-    material: 'Bronze',
-    is_featured: true,
-    sort_order: 7,
-  },
-  {
-    id: 'g-8',
-    title: 'Swami Ayyappan Yogapatta Posture',
-    description: 'Panchaloha idol of Lord Manikandan seated on tiered lotus peedam.',
-    image_url: '/images/statues/ayyappan.jpg',
-    category: 'ayyappan',
-    deity: 'ayyappan',
-    material: 'Panchaloha',
-    is_featured: true,
-    sort_order: 8,
-  },
-  {
-    id: 'g-9',
-    title: 'Veera Anjaneyar Hanuman in Anjali Mudra',
-    description: 'Solid brass Anjaneyar with bell tail and devotional posture.',
-    image_url: '/images/statues/anjaneyar.jpg',
-    category: 'anjaneyar',
-    deity: 'anjaneyar',
+    title: 'Maha Siddhi Vinayagar in Heavy Brass',
+    description: 'Detailed prabhavali engraving on 2-foot seated Ganesha.',
+    image_url: '/images/statues/vinayagar.jpg',
+    category: 'Brass Castings',
+    deity: 'vinayagar',
     material: 'Brass',
-    is_featured: true,
-    sort_order: 9,
-  },
-  {
-    id: 'g-10',
-    title: 'Traditional South Indian Temple Sanctum',
-    description: 'Sanctum mandapam with carved granite pillars and consecrated murtis.',
-    image_url: '/images/statues/temple.jpg',
-    category: 'temple',
-    deity: 'all',
-    material: 'Stone',
-    is_featured: true,
-    sort_order: 10,
-  },
-  {
-    id: 'g-11',
-    title: 'Sacred Panchaloha & Sculpture Materials',
-    description: 'Pure copper, bronze ingots, Krishna Shila stone, and teakwood workbench.',
-    image_url: '/images/statues/materials.jpg',
-    category: 'materials',
-    deity: 'all',
-    material: 'Panchaloha',
-    is_featured: true,
-    sort_order: 11,
+    featured: true,
+    sort_order: 6,
   },
 ];
 
-export const INITIAL_HOMEPAGE: HomepageContent = {
-  id: 'h-1',
-  hero_title: 'Sacred Art, Crafted by Hand.',
-  hero_subtitle: 'Discover beautifully handcrafted South Indian God statues made with traditional artistry and timeless craftsmanship.',
-  hero_badge: 'Traditional Shilpa Shastra Excellence',
-  cta_banner_title: 'Envisioning a Sacred Statue for Your Sanctum or Temple?',
-  cta_banner_subtitle: 'Speak directly with our master sthapathis to sculpt your custom Panchaloha, bronze, or granite deity according to Agama Shastra standards.',
-};
-
-export const INITIAL_SETTINGS: AdminSettings = {
-  id: 's-1',
-  business_name: 'Vetri Arts & Crafts',
-  admin_email: import.meta.env.VITE_ADMIN_EMAIL || 'contact@vetriarts.com',
-  admin_whatsapp: import.meta.env.VITE_ADMIN_WHATSAPP_NUMBER || '+919342839218',
-  business_phone: '+919342839218',
-  instagram_url: 'https://instagram.com/vetriartsncrafts',
-  whatsapp_url: 'https://wa.me/919342839218',
-  address: 'Swamimalai / Mahabalipuram Heritage Workshop, Tamil Nadu, India',
-  email_notifications_enabled: true,
-  whatsapp_notifications_enabled: true,
-};
-
-// ============================================================================
-// RESILIENT REPOSITORY SERVICE LAYER
-// Seamlessly delegates to Supabase if configured, or uses Local/Store fallback
-// ============================================================================
-
+// In-Memory fallback store
 class DataStore {
-  private products: Product[] = [];
-  private categories: Category[] = [];
-  private gallery: GalleryItem[] = [];
+  private products: Product[] = [...INITIAL_PRODUCTS];
   private enquiries: Enquiry[] = [];
   private orders: Order[] = [];
   private customOrders: CustomOrder[] = [];
   private templeOrders: TempleOrder[] = [];
+  private gallery: GalleryItem[] = [...INITIAL_GALLERY];
+  private homepage: HomepageContent = { ...INITIAL_HOMEPAGE };
+  private settings: AdminSettings = { ...INITIAL_SETTINGS };
   private statusHistory: OrderStatusHistory[] = [];
-  private homepage: HomepageContent = INITIAL_HOMEPAGE;
-  private settings: AdminSettings = INITIAL_SETTINGS;
 
   constructor() {
-    this.loadFromStorage();
+    this.loadLocal();
   }
 
-  private loadFromStorage() {
+  private loadLocal() {
+    if (typeof window === 'undefined') return;
     try {
-      const savedProducts = localStorage.getItem('vac_products');
-      this.products = savedProducts ? JSON.parse(savedProducts) : INITIAL_PRODUCTS;
+      const p = localStorage.getItem('sashtha_products') || localStorage.getItem('vetri_products');
+      if (p) this.products = JSON.parse(p);
 
-      const savedCategories = localStorage.getItem('vac_categories');
-      this.categories = savedCategories ? JSON.parse(savedCategories) : INITIAL_CATEGORIES;
+      const e = localStorage.getItem('sashtha_enquiries') || localStorage.getItem('vetri_enquiries');
+      if (e) this.enquiries = JSON.parse(e);
 
-      const savedGallery = localStorage.getItem('vac_gallery');
-      this.gallery = savedGallery ? JSON.parse(savedGallery) : INITIAL_GALLERY;
+      const o = localStorage.getItem('sashtha_orders') || localStorage.getItem('vetri_orders');
+      if (o) this.orders = JSON.parse(o);
 
-      const savedEnquiries = localStorage.getItem('vac_enquiries');
-      this.enquiries = savedEnquiries ? JSON.parse(savedEnquiries) : [];
+      const c = localStorage.getItem('sashtha_custom_orders') || localStorage.getItem('vetri_custom_orders');
+      if (c) this.customOrders = JSON.parse(c);
 
-      const savedOrders = localStorage.getItem('vac_orders');
-      this.orders = savedOrders ? JSON.parse(savedOrders) : [];
+      const t = localStorage.getItem('sashtha_temple_orders') || localStorage.getItem('vetri_temple_orders');
+      if (t) this.templeOrders = JSON.parse(t);
 
-      const savedCustom = localStorage.getItem('vac_custom_orders');
-      this.customOrders = savedCustom ? JSON.parse(savedCustom) : [];
+      const g = localStorage.getItem('sashtha_gallery') || localStorage.getItem('vetri_gallery');
+      if (g) this.gallery = JSON.parse(g);
 
-      const savedTemple = localStorage.getItem('vac_temple_orders');
-      this.templeOrders = savedTemple ? JSON.parse(savedTemple) : [];
+      const h = localStorage.getItem('sashtha_homepage') || localStorage.getItem('vetri_homepage');
+      if (h) this.homepage = JSON.parse(h);
 
-      const savedHistory = localStorage.getItem('vac_status_history');
-      this.statusHistory = savedHistory ? JSON.parse(savedHistory) : [];
+      const s = localStorage.getItem('sashtha_settings') || localStorage.getItem('vetri_settings');
+      if (s) this.settings = JSON.parse(s);
 
-      const savedSettings = localStorage.getItem('vac_settings');
-      this.settings = savedSettings ? JSON.parse(savedSettings) : INITIAL_SETTINGS;
-
-      const savedHomepage = localStorage.getItem('vac_homepage');
-      this.homepage = savedHomepage ? JSON.parse(savedHomepage) : INITIAL_HOMEPAGE;
-    } catch {
-      this.products = INITIAL_PRODUCTS;
-      this.categories = INITIAL_CATEGORIES;
-      this.gallery = INITIAL_GALLERY;
-      this.settings = INITIAL_SETTINGS;
-      this.homepage = INITIAL_HOMEPAGE;
-    }
+      const hist = localStorage.getItem('sashtha_status_history') || localStorage.getItem('vetri_status_history');
+      if (hist) this.statusHistory = JSON.parse(hist);
+    } catch {}
   }
 
-  // --- PRODUCTS ---
+  private save(key: string, data: any) {
+    if (typeof window === 'undefined') return;
+    try {
+      localStorage.setItem(key, JSON.stringify(data));
+    } catch {}
+  }
+
   async getProducts(): Promise<Product[]> {
-    if (supabase) {
+    if (isSupabaseConfigured) {
       try {
         const { data, error } = await supabase
           .from('products')
           .select('*, product_images(*)')
           .order('sort_order', { ascending: true });
         if (!error && data && data.length > 0) {
-          return data.map((item: any) => ({
-            ...item,
-            images: item.product_images || [],
-            primary_image: item.product_images?.find((img: any) => img.is_primary)?.image_url || item.product_images?.[0]?.image_url || '',
+          return data.map((p) => ({
+            ...p,
+            images: p.product_images || generateFourSideImages(p.id, p.deity, p.name),
           }));
         }
-      } catch (e) {
-        console.warn('Supabase fetch failed, fallback to local', e);
-      }
+      } catch {}
     }
     return this.products;
   }
 
   async getProductBySlug(slug: string): Promise<Product | null> {
     const products = await this.getProducts();
-    return products.find((p) => p.slug === slug) || null;
+    return products.find((p) => p.slug === slug || p.id === slug) || null;
   }
 
-  async saveProduct(product: Partial<Product>): Promise<Product> {
-    if (product.id) {
-      const index = this.products.findIndex((p) => p.id === product.id);
-      if (index >= 0) {
-        this.products[index] = { ...this.products[index], ...product, updated_at: new Date().toISOString() } as Product;
-      }
+  async saveProduct(payload: Partial<Product>): Promise<Product> {
+    const id = payload.id || `prod-${Date.now()}`;
+    const deity = payload.deity || 'murugan';
+    const name = payload.name || 'Statue';
+    const images = payload.images || generateFourSideImages(id, deity, name);
+    const item: Product = {
+      id,
+      slug: payload.slug || name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+      product_code: payload.product_code || `VA-${id.slice(-4).toUpperCase()}`,
+      name,
+      deity,
+      description: payload.description || '',
+      material: payload.material || 'Lost-Wax Bronze',
+      height: Number(payload.height) || 12,
+      finish: payload.finish || 'Antique Bronze Finish',
+      price: Number(payload.price) || 0,
+      price_on_request: Boolean(payload.price_on_request),
+      availability: payload.availability || 'made_to_order',
+      made_to_order: payload.made_to_order ?? true,
+      customizable: payload.customizable ?? true,
+      featured: Boolean(payload.featured),
+      sort_order: payload.sort_order || 99,
+      images,
+      primary_image: payload.primary_image || images[0]?.image_url || '',
+      created_at: payload.created_at || new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      ...payload,
+    };
+
+    const idx = this.products.findIndex((p) => p.id === item.id);
+    if (idx >= 0) {
+      this.products[idx] = item;
     } else {
-      const newProduct: Product = {
-        id: `p-${Date.now()}`,
-        slug: product.slug || `statue-${Date.now()}`,
-        product_code: product.product_code || `VAC-${Date.now().toString().slice(-4)}`,
-        name: product.name || 'Handcrafted Deity Statue',
-        deity: product.deity || 'murugan',
-        category_id: product.category_id,
-        description: product.description || '',
-        material: product.material || 'Panchaloha (5-Metal Sacred Alloy)',
-        height: product.height || 18,
-        width: product.width || 10,
-        depth: product.depth || 8,
-        weight: product.weight || 10,
-        finish: product.finish || 'Antique Patina',
-        price: product.price || 0,
-        price_on_request: Boolean(product.price_on_request),
-        availability: product.availability || 'in_stock',
-        made_to_order: Boolean(product.made_to_order),
-        customizable: product.customizable !== false,
-        featured: Boolean(product.featured),
-        sort_order: this.products.length + 1,
-        images: product.images || [],
-        primary_image: product.images?.find((i) => i.is_primary)?.image_url || product.images?.[0]?.image_url || '',
-        created_at: new Date().toISOString(),
-      };
-      this.products.unshift(newProduct);
+      this.products.unshift(item);
     }
-    localStorage.setItem('vac_products', JSON.stringify(this.products));
-    return product as Product;
+    this.save('sashtha_products', this.products);
+    return item;
   }
 
-  async deleteProduct(id: string): Promise<boolean> {
+  async deleteProduct(id: string): Promise<void> {
     this.products = this.products.filter((p) => p.id !== id);
-    localStorage.setItem('vac_products', JSON.stringify(this.products));
-    return true;
+    this.save('sashtha_products', this.products);
   }
 
-  // --- ENQUIRIES ---
   async getEnquiries(): Promise<Enquiry[]> {
+    if (isSupabaseConfigured) {
+      try {
+        const { data, error } = await supabase
+          .from('enquiries')
+          .select('*')
+          .order('created_at', { ascending: false });
+        if (!error && data) return data;
+      } catch {}
+    }
     return this.enquiries;
   }
 
-  async createEnquiry(enquiry: Omit<Enquiry, 'id' | 'created_at' | 'updated_at'>): Promise<Enquiry> {
-    const newEnquiry: Enquiry = {
-      ...enquiry,
-      id: `enq-${Date.now()}`,
+  async createEnquiry(payload: Partial<Enquiry>): Promise<Enquiry> {
+    const reqId = payload.request_id || `ENQ-${Date.now().toString(36).toUpperCase()}`;
+    const item: Enquiry = {
+      id: payload.id || reqId,
+      request_id: reqId,
+      customer_name: payload.customer_name || 'Anonymous',
+      customer_phone: payload.customer_phone || '',
+      customer_email: payload.customer_email,
+      message: payload.message || '',
+      product_id: payload.product_id,
+      product_name: payload.product_name,
+      product_code: payload.product_code,
+      status: 'New',
       created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    };
-    this.enquiries.unshift(newEnquiry);
-    localStorage.setItem('vac_enquiries', JSON.stringify(this.enquiries));
-    return newEnquiry;
+      ...payload,
+    } as Enquiry;
+
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.from('enquiries').insert([item]);
+      } catch {}
+    }
+
+    this.enquiries.unshift(item);
+    this.save('sashtha_enquiries', this.enquiries);
+    return item;
   }
 
-  async updateEnquiryStatus(id: string, status: Enquiry['status'], notes?: string): Promise<void> {
-    const enq = this.enquiries.find((e) => e.id === id);
-    if (enq) {
-      const prev = enq.status;
-      enq.status = status;
-      enq.updated_at = new Date().toISOString();
-      if (notes) enq.notes = notes;
-      this.recordStatusHistory(id, 'enquiry', prev, status, notes);
-      localStorage.setItem('vac_enquiries', JSON.stringify(this.enquiries));
+  async updateEnquiryStatus(id: string, status: EnquiryStatus, notes?: string): Promise<void> {
+    const item = this.enquiries.find((e) => e.id === id);
+    if (item) {
+      const prevStatus = item.status;
+      item.status = status;
+      if (notes) {
+        item.admin_notes = notes;
+        item.notes = notes;
+      }
+      item.updated_at = new Date().toISOString();
+      this.save('sashtha_enquiries', this.enquiries);
+
+      const hist: OrderStatusHistory = {
+        id: `HIST-${Date.now()}`,
+        order_id: id,
+        order_type: 'regular',
+        status,
+        previous_status: prevStatus,
+        new_status: status,
+        notes,
+        created_at: new Date().toISOString(),
+      };
+      this.statusHistory.unshift(hist);
+      this.save('sashtha_status_history', this.statusHistory);
     }
   }
 
-  // --- ORDERS ---
   async getOrders(): Promise<Order[]> {
+    if (isSupabaseConfigured) {
+      try {
+        const { data, error } = await supabase
+          .from('orders')
+          .select('*')
+          .order('created_at', { ascending: false });
+        if (!error && data) return data;
+      } catch {}
+    }
     return this.orders;
   }
 
-  async createOrder(order: Omit<Order, 'id' | 'created_at' | 'updated_at'>): Promise<Order> {
-    const newOrder: Order = {
-      ...order,
+  async createOrder(payload: Partial<Order>): Promise<Order> {
+    const item: Order = {
       id: `ord-${Date.now()}`,
+      order_number: `ORD-${Date.now().toString(36).toUpperCase()}`,
+      product_name: payload.product_name || 'Statue',
+      customer_name: payload.customer_name || 'Customer',
+      customer_phone: payload.customer_phone || '',
+      customer_email: payload.customer_email,
+      delivery_address: payload.delivery_address || '',
+      city: payload.city || '',
+      state: payload.state || '',
+      country: payload.country || 'India',
+      postal_code: payload.postal_code || '',
+      notes: payload.notes,
+      status: 'Received',
       created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    };
-    this.orders.unshift(newOrder);
-    localStorage.setItem('vac_orders', JSON.stringify(this.orders));
-    return newOrder;
+      ...payload,
+    } as Order;
+
+    this.orders.unshift(item);
+    this.save('sashtha_orders', this.orders);
+    return item;
   }
 
-  async updateOrderStatus(id: string, status: Order['status'], notes?: string): Promise<void> {
-    const ord = this.orders.find((o) => o.id === id);
-    if (ord) {
-      const prev = ord.status;
-      ord.status = status;
-      ord.updated_at = new Date().toISOString();
-      if (notes) ord.notes = notes;
-      this.recordStatusHistory(id, 'order', prev, status, notes);
-      localStorage.setItem('vac_orders', JSON.stringify(this.orders));
+  async updateOrderStatus(id: string, status: OrderStatus, notes?: string): Promise<void> {
+    const item = this.orders.find((o) => o.id === id);
+    if (item) {
+      item.status = status;
+      if (notes) item.status_notes = notes;
+      item.updated_at = new Date().toISOString();
+      this.save('sashtha_orders', this.orders);
     }
   }
 
-  // --- CUSTOM ORDERS ---
   async getCustomOrders(): Promise<CustomOrder[]> {
+    if (isSupabaseConfigured) {
+      try {
+        const { data, error } = await supabase
+          .from('custom_orders')
+          .select('*')
+          .order('created_at', { ascending: false });
+        if (!error && data) return data;
+      } catch {}
+    }
     return this.customOrders;
   }
 
-  async createCustomOrder(custom: Omit<CustomOrder, 'id' | 'created_at' | 'updated_at'>): Promise<CustomOrder> {
-    const newCustom: CustomOrder = {
-      ...custom,
-      id: `cst-${Date.now()}`,
+  async createCustomOrder(payload: Partial<CustomOrder>): Promise<CustomOrder> {
+    const item: CustomOrder = {
+      id: `cust-${Date.now()}`,
+      request_id: `CUST-${Date.now().toString(36).toUpperCase()}`,
+      deity: payload.deity || 'murugan',
+      preferred_height: payload.preferred_height || 24,
+      preferred_material: payload.preferred_material || 'Lost-Wax Bronze',
+      customer_name: payload.customer_name || 'Customer',
+      customer_phone: payload.customer_phone || '',
+      customer_email: payload.customer_email,
+      status: 'Received',
       created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    };
-    this.customOrders.unshift(newCustom);
-    localStorage.setItem('vac_custom_orders', JSON.stringify(this.customOrders));
-    return newCustom;
+      ...payload,
+    } as CustomOrder;
+
+    this.customOrders.unshift(item);
+    this.save('sashtha_custom_orders', this.customOrders);
+    return item;
   }
 
-  async updateCustomOrderStatus(id: string, status: CustomOrder['status'], notes?: string): Promise<void> {
-    const cst = this.customOrders.find((c) => c.id === id);
-    if (cst) {
-      const prev = cst.status;
-      cst.status = status;
-      cst.updated_at = new Date().toISOString();
-      if (notes) cst.notes = notes;
-      this.recordStatusHistory(id, 'custom', prev, status, notes);
-      localStorage.setItem('vac_custom_orders', JSON.stringify(this.customOrders));
+  async updateCustomOrderStatus(
+    id: string,
+    status: OrderStatus | string,
+    notes?: string
+  ): Promise<void> {
+    const item = this.customOrders.find((c) => c.id === id);
+    if (item) {
+      item.status = status;
+      if (notes) item.admin_notes = notes;
+      item.updated_at = new Date().toISOString();
+      this.save('sashtha_custom_orders', this.customOrders);
     }
   }
 
-  // --- TEMPLE ORDERS ---
   async getTempleOrders(): Promise<TempleOrder[]> {
+    if (isSupabaseConfigured) {
+      try {
+        const { data, error } = await supabase
+          .from('temple_orders')
+          .select('*')
+          .order('created_at', { ascending: false });
+        if (!error && data) return data;
+      } catch {}
+    }
     return this.templeOrders;
   }
 
-  async createTempleOrder(temple: Omit<TempleOrder, 'id' | 'created_at' | 'updated_at'>): Promise<TempleOrder> {
-    const newTemple: TempleOrder = {
-      ...temple,
-      id: `tmp-${Date.now()}`,
+  async createTempleOrder(payload: Partial<TempleOrder>): Promise<TempleOrder> {
+    const item: TempleOrder = {
+      id: `tmpl-${Date.now()}`,
+      request_id: `TMPL-${Date.now().toString(36).toUpperCase()}`,
+      organization_name: payload.organization_name || 'Temple Trust',
+      contact_person: payload.contact_person || 'Trustee',
+      phone: payload.phone || '',
+      email: payload.email,
+      location: payload.location || 'India',
+      status: 'Received',
       created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    };
-    this.templeOrders.unshift(newTemple);
-    localStorage.setItem('vac_temple_orders', JSON.stringify(this.templeOrders));
-    return newTemple;
+      ...payload,
+    } as TempleOrder;
+
+    this.templeOrders.unshift(item);
+    this.save('sashtha_temple_orders', this.templeOrders);
+    return item;
   }
 
-  async updateTempleOrderStatus(id: string, status: TempleOrder['status'], notes?: string): Promise<void> {
-    const tmp = this.templeOrders.find((t) => t.id === id);
-    if (tmp) {
-      const prev = tmp.status;
-      tmp.status = status;
-      tmp.updated_at = new Date().toISOString();
-      if (notes) tmp.notes = notes;
-      this.recordStatusHistory(id, 'temple', prev, status, notes);
-      localStorage.setItem('vac_temple_orders', JSON.stringify(this.templeOrders));
+  async updateTempleOrderStatus(
+    id: string,
+    status: OrderStatus | string,
+    notes?: string
+  ): Promise<void> {
+    const item = this.templeOrders.find((t) => t.id === id);
+    if (item) {
+      item.status = status;
+      if (notes) item.admin_notes = notes;
+      item.updated_at = new Date().toISOString();
+      this.save('sashtha_temple_orders', this.templeOrders);
     }
   }
 
-  // --- STATUS HISTORY ---
-  async getStatusHistory(orderId: string): Promise<OrderStatusHistory[]> {
-    return this.statusHistory.filter((h) => h.order_id === orderId);
-  }
-
-  private recordStatusHistory(
-    orderId: string,
-    orderType: OrderStatusHistory['order_type'],
-    prevStatus?: string,
-    newStatus: string = 'Received',
-    notes?: string
-  ) {
-    const history: OrderStatusHistory = {
-      id: `hist-${Date.now()}`,
-      order_id: orderId,
-      order_type: orderType,
-      previous_status: prevStatus,
-      new_status: newStatus,
-      changed_by: 'Admin',
-      notes,
-      created_at: new Date().toISOString(),
-    };
-    this.statusHistory.unshift(history);
-    localStorage.setItem('vac_status_history', JSON.stringify(this.statusHistory));
-  }
-
-  // --- GALLERY ---
   async getGallery(): Promise<GalleryItem[]> {
+    if (isSupabaseConfigured) {
+      try {
+        const { data, error } = await supabase
+          .from('gallery')
+          .select('*')
+          .order('sort_order', { ascending: true });
+        if (!error && data && data.length > 0) return data;
+      } catch {}
+    }
     return this.gallery;
   }
 
-  async saveGalleryItem(item: Partial<GalleryItem>): Promise<GalleryItem> {
-    const newItem: GalleryItem = {
-      id: item.id || `g-${Date.now()}`,
-      title: item.title || 'Sacred Sculpture',
-      description: item.description || '',
-      image_url: item.image_url || '',
-      category: item.category || 'all',
-      deity: item.deity,
-      material: item.material,
-      is_featured: Boolean(item.is_featured),
-      sort_order: item.sort_order || this.gallery.length + 1,
-      created_at: new Date().toISOString(),
+  async saveGalleryItem(payload: Partial<GalleryItem>): Promise<GalleryItem> {
+    const id = payload.id || `gal-${Date.now()}`;
+    const item: GalleryItem = {
+      id,
+      title: payload.title || 'Artwork',
+      description: payload.description || '',
+      image_url: payload.image_url || '',
+      category: payload.category || 'workshop',
+      deity: payload.deity,
+      material: payload.material,
+      featured: Boolean(payload.featured ?? payload.is_featured),
+      is_featured: Boolean(payload.is_featured ?? payload.featured),
+      sort_order: payload.sort_order || 99,
+      created_at: payload.created_at || new Date().toISOString(),
+      ...payload,
     };
-    if (item.id) {
-      const idx = this.gallery.findIndex((g) => g.id === item.id);
-      if (idx >= 0) this.gallery[idx] = newItem;
+    const idx = this.gallery.findIndex((g) => g.id === item.id);
+    if (idx >= 0) {
+      this.gallery[idx] = item;
     } else {
-      this.gallery.unshift(newItem);
+      this.gallery.unshift(item);
     }
-    localStorage.setItem('vac_gallery', JSON.stringify(this.gallery));
-    return newItem;
+    this.save('sashtha_gallery', this.gallery);
+    return item;
   }
 
-  async deleteGalleryItem(id: string): Promise<boolean> {
+  async deleteGalleryItem(id: string): Promise<void> {
     this.gallery = this.gallery.filter((g) => g.id !== id);
-    localStorage.setItem('vac_gallery', JSON.stringify(this.gallery));
-    return true;
-  }
-
-  // --- SETTINGS & HOMEPAGE ---
-  async getSettings(): Promise<AdminSettings> {
-    return this.settings;
-  }
-
-  async saveSettings(settings: Partial<AdminSettings>): Promise<AdminSettings> {
-    this.settings = { ...this.settings, ...settings, updated_at: new Date().toISOString() };
-    localStorage.setItem('vac_settings', JSON.stringify(this.settings));
-    return this.settings;
+    this.save('sashtha_gallery', this.gallery);
   }
 
   async getHomepage(): Promise<HomepageContent> {
     return this.homepage;
   }
 
-  async saveHomepage(homepage: Partial<HomepageContent>): Promise<HomepageContent> {
-    this.homepage = { ...this.homepage, ...homepage, updated_at: new Date().toISOString() };
-    localStorage.setItem('vac_homepage', JSON.stringify(this.homepage));
+  async saveHomepage(payload: HomepageContent): Promise<HomepageContent> {
+    this.homepage = { ...payload, updated_at: new Date().toISOString() };
+    this.save('sashtha_homepage', this.homepage);
     return this.homepage;
+  }
+
+  async getSettings(): Promise<AdminSettings> {
+    return this.settings;
+  }
+
+  async saveSettings(payload: AdminSettings): Promise<AdminSettings> {
+    this.settings = { ...payload, updated_at: new Date().toISOString() };
+    this.save('sashtha_settings', this.settings);
+    return this.settings;
+  }
+
+  async getStatusHistory(orderId: string): Promise<OrderStatusHistory[]> {
+    return this.statusHistory.filter((h) => h.order_id === orderId);
   }
 }
 

@@ -17,7 +17,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const ADMIN_SESSION_KEY = 'vetri_admin_session';
+const ADMIN_SESSION_KEY = 'sashtha_admin_session';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -32,7 +32,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           if (data.session?.user) {
             setUser({
               id: data.session.user.id,
-              email: data.session.user.email || 'admin@vetriarts.com',
+              email: data.session.user.email || 'admin@sashthaarts.com',
               role: 'admin',
             });
           }
@@ -41,7 +41,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       } else {
         // Fallback local session for dev/preview
-        const local = localStorage.getItem(ADMIN_SESSION_KEY);
+        const local = localStorage.getItem(ADMIN_SESSION_KEY) || localStorage.getItem('vetri_admin_session');
         if (local) {
           try {
             setUser(JSON.parse(local));
@@ -60,7 +60,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (session?.user) {
           setUser({
             id: session.user.id,
-            email: session.user.email || 'admin@vetriarts.com',
+            email: session.user.email || 'admin@sashthaarts.com',
             role: 'admin',
           });
         } else {
@@ -97,11 +97,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       } else {
         // Local Dev / Demo Admin Authentication
-        // Allows default admin credentials (e.g. admin@vetriarts.com / vetriarts123)
-        if (email.trim().toLowerCase() === 'admin@vetriarts.com' && password === 'vetriarts123') {
+        const cleanEmail = email.trim().toLowerCase();
+        if (
+          (cleanEmail === 'admin@sashthaarts.com' && (password === 'sashthaarts123' || password === 'vetriarts123')) ||
+          (cleanEmail === 'admin@vetriarts.com' && (password === 'sashthaarts123' || password === 'vetriarts123'))
+        ) {
           const demoUser: User = {
             id: 'admin-local-1',
-            email: 'admin@vetriarts.com',
+            email: 'admin@sashthaarts.com',
             role: 'admin',
           };
           setUser(demoUser);
@@ -110,7 +113,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           return { success: true };
         } else {
           setIsLoading(false);
-          return { success: false, error: 'Invalid admin credentials. Use admin@vetriarts.com / vetriarts123 for initial access.' };
+          return { success: false, error: 'Invalid admin credentials. Use admin@sashthaarts.com / sashthaarts123 for access.' };
         }
       }
     } catch (err: any) {

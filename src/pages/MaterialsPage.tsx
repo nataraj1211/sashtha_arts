@@ -120,11 +120,11 @@ export const MaterialsPage: React.FC = () => {
           <div className="flex items-center gap-3">
             <ShieldCheck className="w-8 h-8 text-gold-400" />
             <h3 className="font-serif text-2xl font-bold text-sand-50">
-              The Vetri Arts 100% Solid Casting Guarantee
+              The Sashtha Arts 100% Solid Casting Guarantee
             </h3>
           </div>
           <p className="text-sm text-sand-200 leading-relaxed">
-            We never use hollow resin shells, artificial electroplating on cheap pot metals, or non-traditional fillers. Every murti crafted by Vetri Arts &amp; Crafts is solid metal or monolithic natural stone through and through, ensuring lifelong spiritual integrity.
+            We never use hollow resin shells, artificial electroplating on cheap pot metals, or non-traditional fillers. Every murti crafted by Sashtha Arts &amp; Crafts is solid metal or monolithic natural stone through and through, ensuring lifelong spiritual integrity.
           </p>
         </div>
       </div>

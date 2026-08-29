@@ -59,7 +59,7 @@ export const AdminEnquiryDetailPage: React.FC = () => {
 
   const whatsappUrl = createWhatsAppUrl(
     enquiry.customer_whatsapp || enquiry.customer_phone,
-    `Namaste ${enquiry.customer_name}, regards from Vetri Arts & Crafts concerning your enquiry (${enquiry.request_id}) for "${enquiry.product_name}".`
+    `Namaste ${enquiry.customer_name}, regards from Sashtha Arts & Crafts concerning your enquiry (${enquiry.request_id}) for "${enquiry.product_name}".`
   );
 
   return (

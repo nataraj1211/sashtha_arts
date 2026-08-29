@@ -37,7 +37,7 @@ export async function sendAdminNotifications(payload: NotificationPayload): Prom
   // 1. WhatsApp Notification
   if (settings.whatsapp_notifications_enabled) {
     try {
-      const whatsappText = `🔔 *NEW VETRI ARTS & CRAFTS REQUEST*
+      const whatsappText = `🔔 *NEW SASHTHA ARTS & CRAFTS REQUEST*
 
 *Request ID:* ${payload.requestId}
 *Type:* ${payload.type}
@@ -45,7 +45,7 @@ export async function sendAdminNotifications(payload: NotificationPayload): Prom
 *Phone:* ${payload.customerPhone}
 ${payload.customerWhatsApp ? `*WhatsApp:* ${payload.customerWhatsApp}\n` : ''}${payload.productName ? `*Product:* ${payload.productName}\n` : ''}${payload.material ? `*Material:* ${payload.material}\n` : ''}${payload.size ? `*Size:* ${payload.size}\n` : ''}${payload.quantity ? `*Quantity:* ${payload.quantity}\n` : ''}${payload.location ? `*Location:* ${payload.location}\n` : ''}${payload.message ? `*Requirements:* ${payload.message}\n` : ''}${payload.referenceImagesCount ? `*Reference Images:* ${payload.referenceImagesCount} attached\n` : ''}
 *Open Admin Dashboard:*
-https://vetriarts.com/admin`;
+https://sashthaarts.com/admin`;
 
       // Log dispatch for administrative inspection
       console.log(`[WhatsApp Dispatch] Target: ${settings.admin_whatsapp}\n`, whatsappText);

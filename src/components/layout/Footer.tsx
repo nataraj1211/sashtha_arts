@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Phone, Mail, Instagram, MessageCircle, ShieldCheck, Heart, Lock } from 'lucide-react';
+import { MapPin, Phone, Mail, Instagram, MessageCircle, ShieldCheck, Lock } from 'lucide-react';
 import { createWhatsAppUrl } from '@/lib/utils';
 
 export const Footer: React.FC = () => {
   const adminWhatsApp = import.meta.env.VITE_ADMIN_WHATSAPP_NUMBER || '+919342839218';
   const whatsappUrl = createWhatsAppUrl(
     adminWhatsApp,
-    'Namaste Vetri Arts & Crafts, I would like to consult with an artisan.'
+    'Namaste Sashtha Arts & Crafts, I would like to consult with an artisan.'
   );
 
   return (
@@ -19,12 +19,12 @@ export const Footer: React.FC = () => {
             <Link to="/" className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-gold-500 p-0.5 shrink-0">
                 <div className="w-full h-full bg-temple-950 rounded-[10px] flex items-center justify-center">
-                  <span className="font-serif font-bold text-lg text-gold-400">V</span>
+                  <span className="font-serif font-bold text-lg text-gold-400">S</span>
                 </div>
               </div>
               <div className="flex flex-col">
                 <span className="font-serif font-bold text-xl tracking-wider text-gold-300 uppercase leading-none">
-                  Vetri Arts &amp; Crafts
+                  Sashtha Arts &amp; Crafts
                 </span>
                 <span className="text-[10px] tracking-[0.2em] text-sand-400 uppercase font-light mt-0.5">
                   Sacred Handcrafted Sculptures
@@ -49,7 +49,7 @@ export const Footer: React.FC = () => {
                 <MessageCircle className="w-4 h-4" />
               </a>
               <a
-                href="https://instagram.com/vetriartsncrafts"
+                href="https://instagram.com/sashthaartsncrafts"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-full bg-temple-800 hover:bg-pink-700 text-sand-100 flex items-center justify-center transition-transform hover:scale-110"
@@ -189,13 +189,17 @@ export const Footer: React.FC = () => {
                 <Phone className="w-4 h-4 text-gold-500 shrink-0" />
                 <span>+91 93428 39218</span>
               </div>
+              <div className="flex items-center gap-2">
+                <Mail className="w-4 h-4 text-gold-500 shrink-0" />
+                <span>contact@sashthaarts.com</span>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Bottom Bar with Admin Link */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-sand-400 gap-4">
-          <p>© {new Date().getFullYear()} Vetri Arts &amp; Crafts. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Sashtha Arts &amp; Crafts. All rights reserved.</p>
           <div className="flex items-center gap-6">
             <span>Handcrafted with Devotion in Tamil Nadu</span>
             <Link

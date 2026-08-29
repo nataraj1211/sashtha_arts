@@ -107,7 +107,7 @@ export const FourSideShowcase: React.FC = () => {
             </div>
 
             <h2 className="font-serif text-3xl sm:text-4xl font-bold text-sand-50 leading-tight">
-              Why Every Vetri Creation Features 4-Side Inspection
+              Why Every Sashtha Creation Features 4-Side Inspection
             </h2>
 
             <p className="text-sm sm:text-base text-sand-200/90 leading-relaxed">

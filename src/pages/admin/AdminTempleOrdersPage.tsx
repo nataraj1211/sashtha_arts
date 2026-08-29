@@ -110,7 +110,7 @@ export const AdminTempleOrdersPage: React.FC = () => {
                 {filtered.map((ord) => {
                   const whatsappUrl = createWhatsAppUrl(
                     ord.phone,
-                    `Namaste ${ord.contact_person}, regards from Vetri Arts & Crafts concerning the Temple Project (${ord.request_id}) for ${ord.organization_name}.`
+                    `Namaste ${ord.contact_person}, regards from Sashtha Arts & Crafts concerning the Temple Project (${ord.request_id}) for ${ord.organization_name}.`
                   );
 
                   return (
@@ -131,7 +131,7 @@ export const AdminTempleOrdersPage: React.FC = () => {
 
                       <td className="p-4">
                         <span className="font-bold text-temple-900 uppercase text-[10px] bg-sand-100 px-2 py-0.5 rounded">
-                          {ord.project_type.replace('_', ' ')}
+                          {(ord.project_type || 'Temple Commission').replace('_', ' ')}
                         </span>
                       </td>
 
@@ -203,7 +203,7 @@ export const AdminTempleOrdersPage: React.FC = () => {
               </div>
 
               <div className="p-4 rounded-2xl bg-white border border-sand-300 space-y-2">
-                <p><strong>Project Category:</strong> {selectedOrder.project_type.replace('_', ' ').toUpperCase()}</p>
+                <p><strong>Project Category:</strong> {(selectedOrder.project_type || 'Temple Commission').replace('_', ' ').toUpperCase()}</p>
                 <p><strong>Deity:</strong> {selectedOrder.deity}</p>
                 <p><strong>Required Height / Specs:</strong> {selectedOrder.required_height}</p>
                 <p><strong>Preferred Material:</strong> {selectedOrder.material}</p>

@@ -16,7 +16,7 @@ export const Lightbox: React.FC<LightboxProps> = ({
   onClose,
   images,
   initialIndex = 0,
-  title = 'Vetri Arts Sacred Creation',
+  title = 'Sashtha Arts Sacred Creation',
 }) => {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [zoomLevel, setZoomLevel] = useState(1);

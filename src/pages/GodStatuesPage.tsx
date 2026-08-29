@@ -16,7 +16,7 @@ export const GodStatuesPage: React.FC = () => {
   const initialDeity = searchParams.get('deity') || 'all';
   const initialMaterial = searchParams.get('material') || 'all';
   const initialSearch = searchParams.get('search') || '';
-  const initialSort = (searchParams.get('sort') as FilterState['sortBy']) || 'featured';
+  const initialSort = searchParams.get('sort') || 'featured';
 
   const [filters, setFilters] = useState<FilterState>({
     deity: initialDeity,
@@ -29,10 +29,10 @@ export const GodStatuesPage: React.FC = () => {
   // Sync state with URL params
   useEffect(() => {
     const params: Record<string, string> = {};
-    if (filters.deity !== 'all') params.deity = filters.deity;
-    if (filters.material !== 'all') params.material = filters.material;
+    if (filters.deity && filters.deity !== 'all') params.deity = filters.deity;
+    if (filters.material && filters.material !== 'all') params.material = filters.material;
     if (filters.searchQuery) params.search = filters.searchQuery;
-    if (filters.sortBy !== 'featured') params.sort = filters.sortBy;
+    if (filters.sortBy && filters.sortBy !== 'featured') params.sort = filters.sortBy;
     setSearchParams(params, { replace: true });
   }, [filters, setSearchParams]);
 
