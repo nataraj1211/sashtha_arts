@@ -38,7 +38,7 @@ export const INITIAL_SETTINGS: AdminSettings = {
   business_phone: '+919342839218',
   instagram_url: 'https://instagram.com/sashthaartsncrafts',
   whatsapp_url: 'https://wa.me/919342839218',
-  address: 'Swamimalai / Mahabalipuram Heritage Workshop, Tamil Nadu, India',
+  address: 'Sashtha Arts & Crafts / Dindigul - 624005, Tamil Nadu, India',
   email_notifications_enabled: true,
   whatsapp_notifications_enabled: true,
 };
@@ -372,7 +372,14 @@ class DataStore {
       if (h) this.homepage = JSON.parse(h);
 
       const s = localStorage.getItem('sashtha_settings') || localStorage.getItem('vetri_settings');
-      if (s) this.settings = JSON.parse(s);
+      if (s) {
+        const parsed = JSON.parse(s);
+        if (parsed.address === 'Swamimalai / Mahabalipuram Heritage Workshop, Tamil Nadu, India') {
+          parsed.address = 'Sashtha Arts & Crafts / Dindigul - 624005, Tamil Nadu, India';
+          this.save('sashtha_settings', parsed);
+        }
+        this.settings = parsed;
+      }
 
       const hist = localStorage.getItem('sashtha_status_history') || localStorage.getItem('vetri_status_history');
       if (hist) this.statusHistory = JSON.parse(hist);

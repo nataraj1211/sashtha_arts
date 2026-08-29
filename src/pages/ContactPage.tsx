@@ -26,7 +26,7 @@ export const ContactPage: React.FC = () => {
   const adminWhatsApp = import.meta.env.VITE_ADMIN_WHATSAPP_NUMBER || '+919342839218';
   const whatsappUrl = createWhatsAppUrl(
     adminWhatsApp,
-    'Namaste Sashtha Arts & Crafts, I would like to consult with your artisan.'
+    'hi Sashtha Arts & Crafts, I would like to consult with your artisan.'
   );
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -141,7 +141,7 @@ export const ContactPage: React.FC = () => {
                   <div>
                     <span className="text-[10px] uppercase font-bold text-sand-600 block">Heritage Workshop</span>
                     <span className="font-medium text-temple-900">
-                      Swamimalai / Mahabalipuram Heritage Foundry, Tamil Nadu, India
+                      Sashtha Arts & Crafts / Dindigul - 624005, Tamil Nadu, India
                     </span>
                   </div>
                 </div>
